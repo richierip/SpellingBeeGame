@@ -80,7 +80,11 @@ def trimLine(line):
     return line.replace('\n','').lstrip().replace('  ',' ').replace('  ',' ')
 
 def lookup(fullDict, word):
+    # Remove a trailing 's' from the word since only the root is in the dicionary
     word = word.lower()
+    if word[-1] == 's':
+        word = word[:-1]
+
     found = []
     test = True
     doubleCheck = 0
@@ -91,7 +95,10 @@ def lookup(fullDict, word):
         # Grab just the word out of the definition and test it
         for j in range(len(fullDict[i])-1):
             if fullDict[i][j] == '(':
-                if word == currentKey.strip().lower():
+                
+                # Parse the key for a comparison
+                currentKey = currentKey.strip().lower()
+                if word == currentKey:
                     test = True
                 break
             currentKey += fullDict[i][j]
@@ -99,6 +106,7 @@ def lookup(fullDict, word):
         # grab whole definition if it's a match
         if test:
             print("CURRENT KEY IS :", currentKey)
+            print("LAST CHAR IS :", currentKey[-1])
             found.append(trimLine(fullDict[i][0:-1]))
 
             if doubleCheck < 10: # Check the next 10 entries as well

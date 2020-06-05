@@ -9,7 +9,7 @@ from tkinter import Frame
 from wordGenerator import *
 
 
-HEIGHT = 620
+HEIGHT = 670
 WIDTH = 900 # 996 for golden ratio size
 letterSet = []
 currentWordList = []
@@ -102,10 +102,9 @@ def main():
     currentWordList = check(words, keyletter, letterSet)
 
     
-    print("DICTIONARY TEST :")
+    #print("DICTIONARY TEST :")
     # for i in range(10,15):
     #     print(defList[i])
-    print(lookup(defList, "climb"))
     #ORIGINAL_WORD_LIST = copy.copy(currentWordList)
     ORIGINAL_LETTER_COUNT = countChars(currentWordList)
     
@@ -118,8 +117,10 @@ def main():
     window.title("Welcome Spelling Bee for Kids!")
     window.geometry(str(WIDTH)+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
     hexCanvas = Canvas(window, width=360, height=360)
-    honeyFrame = Frame(window, width=300, height=500)
-    wordCanvas = Canvas(window, width=800, height=200, bg = 'red')
+    #honeyFrame = Frame(window, width=300, height=500)
+    honeyFrame = Frame(window, width=800, height=200)
+    #wordCanvas = Canvas(window, width=800, height=200, bg = 'red')
+    #testFrame = Frame(window, width=800, height=200, bg = 'red')
 
 
 
@@ -207,7 +208,7 @@ def main():
             newPic = tk.PhotoImage(file =choice)
             honey3Label.configure(image = newPic)
             honey3Label.image = newPic
-            honey3Label.grid(column=1,row=2)
+            honey3Label.grid(column=3,row=1)
             # Mandate previous jar is full
             newPic = tk.PhotoImage(file ='data/honey8_8.gif')
             honey2Label.configure(image = newPic)
@@ -221,18 +222,21 @@ def main():
             newPic = tk.PhotoImage(file =choice)
             honey4Label.configure(image = newPic)
             honey4Label.image = newPic
-            honey4Label.grid(column=2,row=2)
+            honey4Label.grid(column=4,row=1)
             # Mandate previous jar is full
             newPic = tk.PhotoImage(file ='data/honey8_8.gif')
             honey3Label.configure(image = newPic)
             honey3Label.image = newPic
-            honey3Label.grid(column=1,row=2)
+            honey3Label.grid(column=3,row=1)
 
     def enterWord(event):
         global textInput, SCORE
         guess = textInput.get().lower()
         if guess in currentWordList:
+            print("")
             print("GOT ONE!")
+            #print("Definition : ")
+            #print(lookup(defList, guess))
             currentWordList.remove(guess)
             print(currentWordList)
             #TODO UPDATE SCORE
@@ -277,7 +281,13 @@ def main():
     honey3Label = tk.Label(honeyFrame, image = honey3)
     honey4 = tk.PhotoImage(file = 'data/honey0_8.gif')
     honey4Label = tk.Label(honeyFrame, image = honey4)
+
     honey1Label.grid(column=1,row=1)
+    #honey2Label.grid(column=2,row=1)
+    #honey3Label.grid(column=3,row=1)
+    #honey4Label.grid(column=4,row=1)
+    
+   
 
 
     # Set the button bindings to individual functions
@@ -295,8 +305,10 @@ def main():
     textInput.grid(column = 2, row = 1)
     scoreLabel.grid(column=3, row= 1)
     hexCanvas.grid(column = 1, row = 2, columnspan = 2)
-    honeyFrame.grid(column = 3, row = 2)
-    wordCanvas.grid(column = 1, row = 3, columnspan = 3)
+    #honeyFrame.grid(column = 3, row = 2)
+    honeyFrame.grid(column = 1, row = 3, columnspan = 3)
+    #wordCanvas.grid(column = 1, row = 3, columnspan = 3)
+    #testFrame.grid(column = 1, row = 3, columnspan = 3)
 
     #Example(window).grid(sticky="nsew")
     #window.grid_rowconfigure(0, weight=1)    # maybe this is dumb lmao
