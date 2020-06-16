@@ -9,6 +9,18 @@ from tkinter import Frame
 from wordGenerator import *
 from Game import myGame
 
+def prime_factors(n):
+    i = 2
+    factors = []
+    while i * i <= n:
+        if n % i:
+            i += 1
+        else:
+            n //= i
+            factors.append(i)
+    if n > 1:
+        factors.append(n)
+    return factors
 
 #TODO really need to abstract some of these methods
 def main():
@@ -17,16 +29,19 @@ def main():
     print("\n Searching for letters in ", len(words), "words... \n")
     currentWordList = check(words, keyletter, letterSet)
 
+    originalWordList = copy.copy(currentWordList)
+        
+
     # Generic tkinter setup
     window = tk.Tk()
     hexCanvas = Canvas(window, width=360, height=360, bg = 'purple')
     #honeyFrame = Frame(window, width=300, height=500)
     honeyFrame = Frame(window, width=800, height=200, bg = 'blue') #TODO something with colors needs to change 
-    wordCanvas = Canvas(window, width=500, height=360, bg = 'red')
+    wordFrame = Frame(window, width=500, height=360, bg = 'red')
     #testFrame = Frame(window, width=800, height=200, bg = 'red')
 
     ### Create Game object ###
-    game = myGame(window, hexCanvas, honeyFrame, currentWordList, letterSet, wordCanvas)
+    game = myGame(window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList)
 
     game.window.title("Welcome Spelling Bee for Kids!")
     game.window.geometry(str(game.WIDTH)+'x'+str(game.HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
@@ -82,6 +97,9 @@ def main():
 
     # Draw everything
     game.drawWidgets()
+
+        
+
 
     game.makeMenu()
     game.window.mainloop()

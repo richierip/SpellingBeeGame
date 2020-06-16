@@ -82,8 +82,6 @@ def trimLine(line):
 def lookup(fullDict, word):
     # Remove a trailing 's' from the word since only the root is in the dicionary
     word = word.lower()
-    if word[-1] == 's':
-        word = word[:-1]
 
     found = []
     test = True
@@ -113,6 +111,11 @@ def lookup(fullDict, word):
                 doubleCheck +=1
                 continue
             break
+    
+    if found == []:
+        if word[-1] == 's':
+            word = word[:-1]
+            found = lookup(fullDict, word)
     return found
 
 def check(words, keyletter, otherletters):

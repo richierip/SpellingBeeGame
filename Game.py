@@ -8,7 +8,7 @@ from tkinter import Frame
 from wordGenerator import *
 
 class myGame:
-    def __init__(self, window, hexCanvas, honeyFrame, currentWordList, letterSet, wordCanvas):
+    def __init__(self, window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList):
 
         self.HEIGHT = 670
         self.WIDTH = 900 # 996 for golden ratio size
@@ -18,17 +18,20 @@ class myGame:
         self.FONT_SELECT = 'Comic Sans'
         self.SCORE = 0
         self.ORIGINAL_LETTER_COUNT = 0
+        self.FOUND = []
+        self.defList = defList
 
         self.window = window
         self.hexCanvas = hexCanvas
         self.honeyFrame = honeyFrame
-        self.wordCanvas = wordCanvas
+        self.wordFrame = wordFrame
         self.honey1Label = None
         self.honey2Label = None
         self.honey3Label = None
         self.honey4Label = None
         self.scoreLabel = None
         self.beeLabel = None
+        self.customLabel = None
         
 
     def countChars(self, wordList):
@@ -185,8 +188,14 @@ class myGame:
             print("GOT ONE!")
             #print("Definition : ")
             #print(lookup(defList, guess))
+
+            # Take the word out of list and put it in FOUND
             self.currentWordList.remove(guess)
+            self.FOUND.append(guess)
             print(self.currentWordList)
+
+            self.updateWordFrame()
+            
             #TODO UPDATE SCORE
             self.SCORE = self.updateScore(self.currentWordList)
             self.scoreLabel.configure(text="SCORE: " + str(int(self.SCORE)))
@@ -194,7 +203,6 @@ class myGame:
             self.updateHoney(self.SCORE)
         else:
             print("DARN!") 
-            #TODO UPDATE SCORE
         self.textInput.selection_clear()
         self.textInput.delete(0,tk.END)
 
@@ -214,9 +222,34 @@ class myGame:
         self.scoreLabel.grid(column=3, row= 1)
         self.hexCanvas.grid(column = 1, row = 2, columnspan = 2)
         #honeyFrame.grid(column = 3, row = 2)
-        self.honeyFrame.grid(column = 1, row = 3, columnspan = 3)
-        self.wordCanvas.grid(column = 3, row = 2, columnspan = 2)
+        self.honeyFrame.grid(column = 1, row = 3, columnspan = 3, padx = 30)
+        self.wordFrame.grid(column = 3, row = 2, columnspan = 2)
         #testFrame.grid(column = 1, row = 3, columnspan = 3)
+
+
+    def printWord(self, word):
+        print(word)
+        print("Definition : ")
+        print(lookup(self.defList, word))
+
+    def wordLabelClicked(self, event):
+        self.printWord(event.widget.cget("text"))
+
+    def clearWordFrame(self):
+        list = self.wordFrame.grid_slaves()
+        for l in list:
+            l.destroy()
+
+    def updateWordFrame(self):
+        # Wipe frame, then add word
+        self.clearWordFrame()
+        num = math.ceil(math.sqrt(len(self.FOUND)))
+        for i in range(len(self.FOUND)):
+            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg='Black',font=(self.FONT_SELECT, '20'))
+            self.customLabel.bind("<Button-1>", self.wordLabelClicked)
+            print("current lable column: ", int(i%num), ", row: ", int(i/num))
+            self.customLabel.grid(column = int(i%num), row = int(i/num))
+
 
 
 
