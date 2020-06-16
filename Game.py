@@ -8,7 +8,7 @@ from tkinter import Frame
 from wordGenerator import *
 
 class myGame:
-    def __init__(self, window, hexCanvas, honeyFrame, currentWordList, letterSet):
+    def __init__(self, window, hexCanvas, honeyFrame, currentWordList, letterSet, wordCanvas):
 
         self.HEIGHT = 670
         self.WIDTH = 900 # 996 for golden ratio size
@@ -22,6 +22,7 @@ class myGame:
         self.window = window
         self.hexCanvas = hexCanvas
         self.honeyFrame = honeyFrame
+        self.wordCanvas = wordCanvas
         self.honey1Label = None
         self.honey2Label = None
         self.honey3Label = None
@@ -214,7 +215,7 @@ class myGame:
         self.hexCanvas.grid(column = 1, row = 2, columnspan = 2)
         #honeyFrame.grid(column = 3, row = 2)
         self.honeyFrame.grid(column = 1, row = 3, columnspan = 3)
-        #wordCanvas.grid(column = 1, row = 3, columnspan = 3)
+        self.wordCanvas.grid(column = 3, row = 2, columnspan = 2)
         #testFrame.grid(column = 1, row = 3, columnspan = 3)
 
 
