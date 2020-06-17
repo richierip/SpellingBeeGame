@@ -9,6 +9,10 @@ from tkinter import Frame
 from wordGenerator import *
 from Game import myGame
 
+
+'''
+Superfluous at this point I think 
+'''
 def prime_factors(n):
     i = 2
     factors = []
@@ -44,7 +48,11 @@ def main():
     game = myGame(window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList)
 
     game.window.title("Welcome Spelling Bee for Kids!")
+    game.window.option_add('*tearOff', False)
     game.window.geometry(str(game.WIDTH)+'x'+str(game.HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
+
+    #print("$$$$$$$$$$$$")
+    #print(game.window.tk.call('tk', 'windowingsystem'))
 
 
     #print("DICTIONARY TEST :")
@@ -74,8 +82,8 @@ def main():
     game.scoreLabel = tk.Label(game.window, text="SCORE: " + str(int(game.SCORE)), fg='Black', bg='yellow',font=(game.FONT_SELECT, '36'))
 
     # Bee pic code
-    beeImg = tk.PhotoImage(file = 'data/bee2.gif')
-    game.beeLabel = tk.Label(game.window, image = beeImg)
+    game.beePic = tk.PhotoImage(file = 'data/bee2.gif')
+    game.beeLabel = tk.Label(game.window, image = game.beePic)
 
     # Honey pics starter code
     honey1 = tk.PhotoImage(file = 'data/honey0_8.gif')

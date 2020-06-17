@@ -7,15 +7,30 @@ DICT_FILE = 'data\small_dict.txt'
 DEF_FILE = 'data/azdictionary.txt'
 
 
+def addedToDictionary(newWord):
+    try:
+        outF = open(DICT_FILE, "a")
+        # write line to output file
+        outF.write(newWord + "\n")
+        outF.close()
+        return True
+    except:
+        return False
 
-
-
-
-def addToDictionary(newWord):
-    outF = open(DICT_FILE, "a")
-    # write line to output file
-    outF.write(newWord + "\n")
-    outF.close()
+def removedFromDictionary(word):
+    retVal = False
+    try:
+        with open(DICT_FILE, "r") as f:
+            lines = f.readlines()
+        with open(DICT_FILE, "w") as f:
+            for line in lines:
+                if line.strip("\n") != word:
+                    f.write(line)
+                else:
+                    retVal = True
+        return retVal
+    except:
+        return False
 
 def checkForRules(words, letters):
     hardLetters = ['q','z','x','v','j']

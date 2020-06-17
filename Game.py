@@ -1,4 +1,5 @@
 ''' This file holds the Game object class instantiated in interface.py'''
+
 import random, copy, math
 import tkinter as tk
 from tkinter import scrolledtext
@@ -25,38 +26,16 @@ class myGame:
         self.hexCanvas = hexCanvas
         self.honeyFrame = honeyFrame
         self.wordFrame = wordFrame
+        self.trackResult = tk.StringVar()
         self.honey1Label = None
         self.honey2Label = None
         self.honey3Label = None
         self.honey4Label = None
         self.scoreLabel = None
         self.beeLabel = None
+        self.beePic = None
         self.customLabel = None
-        
-
-    def countChars(self, wordList):
-        count = 0
-        for elem in wordList:
-            count += len(elem)
-        return count
-
-    def addWordToDict(self):
-        word = self.textInput.get().lower()
-        self.textInput.selection_clear()
-        self.textInput.delete(0,tk.END)
-        if self.letterSet[0] in word:
-            self.currentWordList.append(word)
-        addToDictionary(word)
-
-    def makeMenu(self):
-        menu = Menu(self.window)
-        new_item = Menu(menu)
-        new_item.add_command(label='New')
-        second_item = Menu(menu)
-        second_item.add_command(label = "click", command = self.addWordToDict)
-        menu.add_cascade(label='File', menu=new_item)
-        menu.add_cascade(label='Add a word to the dictionary',menu=second_item)
-        self.window.config(menu=menu)
+    
 
     def makeHexButton(self, letter, offsetx, offsety, sidelength, tagName):
 
@@ -118,6 +97,12 @@ class myGame:
 
     def clicked7(self, *args):
         self.insertLetter(6)
+
+    def countChars(self, wordList):
+        count = 0
+        for elem in wordList:
+            count += len(elem)
+        return count
 
     # Maps score out of 1000 possible. Maybe do something else?
     def updateScore(self, currentWordList):
@@ -191,7 +176,7 @@ class myGame:
 
             # Take the word out of list and put it in FOUND
             self.currentWordList.remove(guess)
-            self.FOUND.append(guess)
+            self.FOUND.append(guess.title())
             print(self.currentWordList)
 
             self.updateWordFrame()
@@ -227,13 +212,53 @@ class myGame:
         #testFrame.grid(column = 1, row = 3, columnspan = 3)
 
 
-    def printWord(self, word):
-        print(word)
-        print("Definition : ")
-        print(lookup(self.defList, word))
+    #######################################
+    #          Definition Handlers        #
+    #######################################
+
+    #TODO something with style consistency in here
+
+    def displayDefinition(self, word):
+        defArray = lookup(self.defList, word)
+        print("Definition : ", defArray)
+        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
+        w.title("Dictionary" )
+        w.focus()
+
+        # Put the bee there I guess
+        #beeImg2 = tk.PhotoImage(file = 'data/bee2.gif')
+        beeLabel2 = tk.Label(w, image = self.beePic)
+        beeLabel2.pack()
+
+        # If no definition is found, say so
+        if defArray == []:
+            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg='Black',font=(self.FONT_SELECT, '14'))
+            displayLabel.pack()
+
+        else:
+            if len(defArray) == 1:
+                message = "I found one definition for " + word + " : "
+            else:
+                message = "I found " + str(len(defArray)) + " definitions for " + word + " : "
+
+            displayLabel = tk.Label(w, text= message, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+            displayLabel.pack()
+            for l in defArray:
+                displayLabel = tk.Label(w, text= l, fg='Black',font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
+                displayLabel.pack()
+
+        '''
+        popupTextInput = tk.Entry(w,width=10,font=(self.FONT_SELECT, '36'))
+        popupTextInput.focus() 
+        popupTextInput.pack()
+        '''
 
     def wordLabelClicked(self, event):
-        self.printWord(event.widget.cget("text"))
+        self.displayDefinition(event.widget.cget("text"))
+
+        #TODO Why the hell is this frame resizing itself
+        print("FRAME WIDTH IS ",self.wordFrame.cget("width"))
+        print("FRAME HEIGHT IS ",self.wordFrame.cget("height"))
 
     def clearWordFrame(self):
         list = self.wordFrame.grid_slaves()
@@ -241,14 +266,116 @@ class myGame:
             l.destroy()
 
     def updateWordFrame(self):
-        # Wipe frame, then add word
+        # Sort found words list show they show up alphabetically
+        self.FOUND.sort()
+        # Wipe frame
         self.clearWordFrame()
+
+        #Regrid everything with new bindings   #TODO dynamically size the text?
         num = math.ceil(math.sqrt(len(self.FOUND)))
         for i in range(len(self.FOUND)):
-            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg='Black',font=(self.FONT_SELECT, '20'))
+            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg='Black',font=(self.FONT_SELECT, '20'), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
-            print("current lable column: ", int(i%num), ", row: ", int(i/num))
+            #print("current lable column: ", int(i%num), ", row: ", int(i/num))
             self.customLabel.grid(column = int(i%num), row = int(i/num))
+
+    #######################################
+    #          MENU Handlers        #
+    #######################################
+
+    def addWordToDict(self, event):
+        word = event.widget.get().lower()
+        event.widget.selection_clear()
+        event.widget.delete(0,tk.END)
+        
+        isValid = True
+        if self.letterSet[0] in word:
+            for i in range(len(word)):
+                if word[i] not in self.letterSet:
+                    isValid = False
+        if isValid:
+            self.currentWordList.append(word)
+            self.ORIGINAL_LETTER_COUNT += len(word)
+            self.SCORE = self.updateScore(self.currentWordList)
+
+        if addedToDictionary(word):
+            message = "Success! You have added " + word +" to the dictionary."
+        else:
+            message = "Something went wrong :( . Close the program and try again, or edit the small_dict.txt file directly. "    
+        self.trackResult.set(message)
+        
+
+    def addHandler(self):
+        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
+        w.title("Add a word to the Dictionary!" )
+        w.bind('<Return>', self.addWordToDict)
+        w.focus()
+
+        # Put the bee there I guess 
+        beeLabel2 = tk.Label(w, image = self.beePic)
+        beeLabel2.pack()
+
+        message = "Please enter a word you would like to add : "
+        self.trackResult.set(message)
+        displayLabel = tk.Label(w, textvariable= self.trackResult, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+        displayLabel.pack()
+        
+        popupTextInput = tk.Entry(w,width=10,font=(self.FONT_SELECT, '36'))
+        popupTextInput.focus() 
+        popupTextInput.pack()
+
+
+
+
+    def removeWord(self, event):
+        word = event.widget.get().lower()
+        event.widget.selection_clear()
+        event.widget.delete(0,tk.END)
+        
+        if word in self.currentWordList:
+            self.currentWordList.remove(word)
+            self.ORIGINAL_LETTER_COUNT -= len(word)
+            self.SCORE = self.updateScore(self.currentWordList)
+
+        if removedFromDictionary(word):
+            message = "Success! You have removed " + word +" from the dictionary."
+        else:
+            message = "Whoops! Couldn't find " + word +  " in the dictionary"    
+        self.trackResult.set(message)
+        
+
+    def removeHandler(self):
+        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
+        w.title("Remove a word to the Dictionary!" )
+        w.bind('<Return>', self.removeWord)
+        w.focus()
+
+        # Put the bee there I guess 
+        beeLabel2 = tk.Label(w, image = self.beePic)
+        beeLabel2.pack()
+
+        message = "Please enter a word you would like to remove : "
+        self.trackResult.set(message)
+        displayLabel = tk.Label(w, textvariable= self.trackResult, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+        displayLabel.pack()
+        
+        popupTextInput = tk.Entry(w,width=10,font=(self.FONT_SELECT, '36'))
+        popupTextInput.focus() 
+        popupTextInput.pack()
+
+        
+        
+
+    def makeMenu(self):
+        rootMenu = Menu(self.window)
+        new_item = Menu(rootMenu)
+        #new_item.add_command(label='New')
+        second_item = Menu(rootMenu)
+        #second_item.add_command(label = "click", command = self.addWordToDict)
+        rootMenu.add_cascade(label='File', menu=new_item)
+        rootMenu.add_cascade(label='Add a word to the dictionary',command = self.addHandler)
+        rootMenu.add_cascade(label='Remove a word to the dictionary',command = self.removeHandler)
+        self.window.config(menu=rootMenu)
 
 
 
