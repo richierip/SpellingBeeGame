@@ -9,25 +9,17 @@ from tkinter import Frame
 from wordGenerator import *
 from Game import myGame
 
+window = None 
+HEIGHT = 690
+WIDTH = 900 # 996 for golden ratio size 
 
-'''
-Superfluous at this point I think 
-'''
-def prime_factors(n):
-    i = 2
-    factors = []
-    while i * i <= n:
-        if n % i:
-            i += 1
-        else:
-            n //= i
-            factors.append(i)
-    if n > 1:
-        factors.append(n)
-    return factors
 
-#TODO really need to abstract some of these methods
-def main():
+def clearWindow(window):
+        list = window.grid_slaves()
+        for l in list:
+            l.destroy()
+
+def startGame(event):
     words, defList = getWords()
     keyletter, letterSet = getLetterset(words)
     print("\n Searching for letters in ", len(words), "words... \n")
@@ -37,27 +29,25 @@ def main():
         
 
     # Generic tkinter setup
-    window = tk.Tk()
-    hexCanvas = Canvas(window, width=360, height=360, bg = 'purple')
+    global window
+    clearWindow(window)
+    hexCanvas = Canvas(window, width=360, height=360)#, bg = 'purple')
     #honeyFrame = Frame(window, width=300, height=500)
-    honeyFrame = Frame(window, width=800, height=200, bg = 'blue') #TODO something with colors needs to change 
-    wordFrame = Frame(window, width=500, height=360, bg = 'red')
+    honeyFrame = Frame(window, width=800, height=200)#, bg = 'blue') #TODO something with colors needs to change 
+    wordFrame = Frame(window, width=500, height=360)#, bg = 'red')
     #testFrame = Frame(window, width=800, height=200, bg = 'red')
 
     ### Create Game object ###
     game = myGame(window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList)
-
+    game.checkUser()
     game.window.title("Welcome Spelling Bee for Kids!")
     game.window.option_add('*tearOff', False)
-    game.window.geometry(str(game.WIDTH)+'x'+str(game.HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
+    game.window.geometry(str(WIDTH)+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
+    game.WIDTH = WIDTH
+    game.HEIGHT = HEIGHT
 
     #print("$$$$$$$$$$$$")
     #print(game.window.tk.call('tk', 'windowingsystem'))
-
-
-    #print("DICTIONARY TEST :")
-    # for i in range(10,15):
-    #     print(defList[i])
     game.ORIGINAL_LETTER_COUNT = game.countChars(currentWordList)
     
     #currentWordList = sorted(currentWordList, key=len)
@@ -86,8 +76,8 @@ def main():
     game.beeLabel = tk.Label(game.window, image = game.beePic)
 
     # Honey pics starter code
-    honey1 = tk.PhotoImage(file = 'data/honey0_8.gif')
-    game.honey1Label = tk.Label(honeyFrame, image = honey1)
+    game.honeyPic = tk.PhotoImage(file = 'data/honey0_8.gif')
+    game.honey1Label = tk.Label(honeyFrame, image = game.honeyPic)
     honey2 = tk.PhotoImage(file = 'data/blank.gif')
     game.honey2Label = tk.Label(honeyFrame, image = honey2)
     honey3 = tk.PhotoImage(file = 'data/blank.gif')
@@ -95,10 +85,10 @@ def main():
     honey4 = tk.PhotoImage(file = 'data/blank.gif')
     game.honey4Label = tk.Label(honeyFrame, image = honey4)
 
-    game.honey1Label.grid(column=1,row=1)
-    game.honey2Label.grid(column=2,row=1)
-    game.honey3Label.grid(column=3,row=1)
-    game.honey4Label.grid(column=4,row=1)
+    # game.honey1Label.grid(column=1,row=1)
+    # game.honey2Label.grid(column=2,row=1)
+    # game.honey3Label.grid(column=3,row=1)
+    # game.honey4Label.grid(column=4,row=1)
 
     # Set the button bindings to individual functions
     game.makeBindings()
@@ -106,11 +96,33 @@ def main():
     # Draw everything
     game.drawWidgets()
 
-        
-
-
     game.makeMenu()
-    game.window.mainloop()
+
+def main():
+    global window
+    window = tk.Tk()
+
+    window.title("Welcome Spelling Bee for Kids!")
+    window.geometry(str(WIDTH)+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
+
+    # add an instructions label 
+    instructions = tk.Label(window, text = "Get ready for a spelling bee! Make words from the available letters, "
+                            "but all words much use the center letter. Enter your name in the box below.", 
+                                        font = ('Helvetica', 20), wraplength = 600, padx = 100) 
+    instructions.grid() 
+    
+    # add a text entry box for entering name
+    nameBox = tk.Entry(window) 
+    
+    # run the 'startGame' function  
+    # when the enter key is pressed 
+    window.bind('<Return>', startGame) 
+    nameBox.grid() 
+    # set focus on the entry box 
+    nameBox.focus_set()
+
+    #Start the GUI
+    window.mainloop()
 
 
 if __name__ == '__main__':

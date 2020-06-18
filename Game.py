@@ -7,12 +7,12 @@ from tkinter import Menu
 from tkinter import Canvas
 from tkinter import Frame
 from wordGenerator import *
+import StoreAndLoad
 
 class myGame:
     def __init__(self, window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList):
-
-        self.HEIGHT = 670
-        self.WIDTH = 900 # 996 for golden ratio size
+        self.WIDTH = None
+        self.HEIGHT = None
         self.letterSet = letterSet
         self.currentWordList = currentWordList
         self.textInput = None
@@ -27,6 +27,7 @@ class myGame:
         self.honeyFrame = honeyFrame
         self.wordFrame = wordFrame
         self.trackResult = tk.StringVar()
+        self.rootMenu = None
         self.honey1Label = None
         self.honey2Label = None
         self.honey3Label = None
@@ -34,8 +35,17 @@ class myGame:
         self.scoreLabel = None
         self.beeLabel = None
         self.beePic = None
+        self.honeyPic = None
         self.customLabel = None
+
+        # Pickle user values. put in new class in a bit
+        self.userInfo = StoreAndLoad.loadObject('data/userInfo')
     
+    def checkUser(self):
+        if self.userInfo == None:
+            self.userInfo = StoreAndLoad.userPresets('Ken', 'Yellow', 'Black', [])
+        else:
+            pass
 
     def makeHexButton(self, letter, offsetx, offsety, sidelength, tagName):
 
@@ -191,6 +201,9 @@ class myGame:
         self.textInput.selection_clear()
         self.textInput.delete(0,tk.END)
 
+        if self.SCORE >=999:
+            self.endGame()
+
     def makeBindings(self):
         self.hexCanvas.tag_bind("playbutton1","<Button-1>",self.clicked1)
         self.hexCanvas.tag_bind("playbutton2","<Button-1>",self.clicked2)
@@ -205,11 +218,57 @@ class myGame:
         self.beeLabel.grid(column = 1, row = 1)
         self.textInput.grid(column = 2, row = 1)
         self.scoreLabel.grid(column=3, row= 1)
-        self.hexCanvas.grid(column = 1, row = 2, columnspan = 2)
+        self.hexCanvas.grid(column = 1, row = 2, columnspan = 2, padx = 50)
         #honeyFrame.grid(column = 3, row = 2)
         self.honeyFrame.grid(column = 1, row = 3, columnspan = 3, padx = 30)
         self.wordFrame.grid(column = 3, row = 2, columnspan = 2)
         #testFrame.grid(column = 1, row = 3, columnspan = 3)
+
+        #These are drawn INSIDE the honeyFrame, has its own gridding system
+        self.honey1Label.grid(column=1,row=1)
+        self.honey2Label.grid(column=2,row=1)
+        self.honey3Label.grid(column=3,row=1)
+        self.honey4Label.grid(column=4,row=1)
+
+    #######################################
+    #               End Game              #
+    #######################################
+
+
+    def clearWindow(self):
+        list = self.window.grid_slaves()
+        for l in list:
+            l.destroy()
+
+    def endGame(self):
+        self.userInfo.highScoreTable.append((self.userInfo.name, int(self.SCORE )))
+        self.userInfo.highScoreTable.sort(key=lambda x: x[1])
+
+        # Clear everything, delete the Endgame menu option
+        self.clearWindow()
+        self.rootMenu.delete(3) # THIS NEEDS TO BE THE LAST ITEM IN THE MENU OR ELSE
+        endFrame = Frame(self.window, width=400, height =  self.HEIGHT)
+        #self.beeLabel.grid(column = 0, row = 2)
+
+
+        for i in range(len(self.userInfo.highScoreTable)):
+            if i % 2 ==0:
+                bgColor = 'black'
+                textColor = 'white'
+            else:
+                bgColor = 'white'
+                textColor = 'black'
+
+            currentObject = self.userInfo.highScoreTable[i]
+
+            for j in range(len(currentObject)):
+                if j ==1:
+                    displayLabel = tk.Label(endFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 20)
+                else:
+                    displayLabel = tk.Label(endFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), padx = 30)
+                displayLabel.grid(column = j, row = i+1)
+        endFrame.pack()
+        StoreAndLoad.storeObject(self.userInfo, 'data/userInfo')
 
 
     #######################################
@@ -367,15 +426,16 @@ class myGame:
         
 
     def makeMenu(self):
-        rootMenu = Menu(self.window)
-        new_item = Menu(rootMenu)
+        self.rootMenu = Menu(self.window)
+        new_item = Menu(self.rootMenu)
         #new_item.add_command(label='New')
-        second_item = Menu(rootMenu)
+        second_item = Menu(self.rootMenu)
         #second_item.add_command(label = "click", command = self.addWordToDict)
-        rootMenu.add_cascade(label='File', menu=new_item)
-        rootMenu.add_cascade(label='Add a word to the dictionary',command = self.addHandler)
-        rootMenu.add_cascade(label='Remove a word to the dictionary',command = self.removeHandler)
-        self.window.config(menu=rootMenu)
+        self.rootMenu.add_cascade(label='File', menu=new_item)
+        self.rootMenu.add_cascade(label='Add a word to the dictionary',command = self.addHandler)
+        self.rootMenu.add_cascade(label='Remove a word to the dictionary',command = self.removeHandler)
+        self.rootMenu.add_cascade(label='End Game',command = self.endGame)
+        self.window.config(menu=self.rootMenu)
 
 
 
