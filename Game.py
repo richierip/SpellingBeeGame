@@ -242,7 +242,7 @@ class myGame:
 
     def endGame(self):
         self.userInfo.highScoreTable.append((self.userInfo.name, int(self.SCORE )))
-        self.userInfo.highScoreTable.sort(key=lambda x: x[1])
+        self.userInfo.highScoreTable.sort(key=lambda x: x[1], reverse = True)
 
         # Clear everything, delete the Endgame menu option
         self.clearWindow()
@@ -265,7 +265,7 @@ class myGame:
                 if j ==1:
                     displayLabel = tk.Label(endFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 20)
                 else:
-                    displayLabel = tk.Label(endFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), padx = 30)
+                    displayLabel = tk.Label(endFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 10)
                 displayLabel.grid(column = j, row = i+1)
         endFrame.pack()
         StoreAndLoad.storeObject(self.userInfo, 'data/userInfo')
@@ -313,6 +313,7 @@ class myGame:
         '''
 
     def wordLabelClicked(self, event):
+        print(event.widget)
         self.displayDefinition(event.widget.cget("text"))
 
         #TODO Why the hell is this frame resizing itself
@@ -405,7 +406,7 @@ class myGame:
 
     def removeHandler(self):
         w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
-        w.title("Remove a word to the Dictionary!" )
+        w.title("Remove a word from the Dictionary!" )
         w.bind('<Return>', self.removeWord)
         w.focus()
 
