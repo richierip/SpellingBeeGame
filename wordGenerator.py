@@ -35,9 +35,12 @@ def removedFromDictionary(word):
 def checkForRules(words, letters):
     hardLetters = ['q','z','x','v','j']
     if len(check(words,letters[0],letters)) < MIN_WORDS_REQUIRED:
+        print("FAILED: TOO FEW WORDS FOUND")
+        print(len(check(words,letters[0],letters)))
         return False
     # Make sure there aren't annoying letters in the same set
     elif len([i for i in hardLetters if i in letters]) >= 2:
+        print("FAILED: ANNOYING LETTERS")
         return False
     return True
 
@@ -45,9 +48,11 @@ def getLetterset(words):
     consonants = ['b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z']
     vowels = ['a','e','i','o','u']
     while True:
+        print("In loop")
         twoVowels = random.sample(vowels, 2)
         fiveConsonants = random.sample(consonants,5)
         testLetterSet = twoVowels + fiveConsonants # Mandate that letterset has 2 vowels and five consonants
+        print(testLetterSet)
         if(checkForRules(words, testLetterSet)):
             print("LETTERSET", testLetterSet)
             return testLetterSet[0], testLetterSet
@@ -135,18 +140,20 @@ def lookup(fullDict, word):
 
 def check(words, keyletter, otherletters):
     found = []
-    test = True
+    testPassed = True
     for i in range(len(words)):
-        test = True
-        if keyletter not in words[i]:
+        currentWord = words[i].strip()
+        testPassed = True
+        if keyletter not in currentWord:
             continue
-        for j in range(len(words[i])-1):
-            if words[i][j] not in otherletters:
-                test = False
+        for j in range(len(currentWord)):
+            if currentWord[j] not in otherletters:
+                testPassed = False
                 break
-        if test:
-            if len(words[i][0:-1]) >= MIN_WORD_SIZE:
-                found.append(words[i][0:-1])
+        if testPassed:
+            print(currentWord)
+            if len(currentWord) >= MIN_WORD_SIZE:
+                found.append(currentWord)
     return found
 
 

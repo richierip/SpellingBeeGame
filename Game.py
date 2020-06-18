@@ -337,7 +337,7 @@ class myGame:
             self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg='Black',font=(self.FONT_SELECT, '20'), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
             #print("current lable column: ", int(i%num), ", row: ", int(i/num))
-            self.customLabel.grid(column = int(i%num), row = int(i/num))
+            self.customLabel.grid(row = int(i%num), column = int(i/num))
 
     #######################################
     #          MENU Handlers        #
@@ -434,7 +434,7 @@ class myGame:
         #second_item.add_command(label = "click", command = self.addWordToDict)
         self.rootMenu.add_cascade(label='File', menu=new_item)
         self.rootMenu.add_cascade(label='Add a word to the dictionary',command = self.addHandler)
-        self.rootMenu.add_cascade(label='Remove a word to the dictionary',command = self.removeHandler)
+        self.rootMenu.add_cascade(label='Remove a word from the dictionary',command = self.removeHandler)
         self.rootMenu.add_cascade(label='End Game',command = self.endGame)
         self.window.config(menu=self.rootMenu)
 

@@ -24,7 +24,8 @@ def startGame(event):
     global game
 
     #  Replace name in Persistent Storage
-    game.userInfo.name = event.widget.get().title()
+    if event.widget.get() != "":
+        game.userInfo.name = event.widget.get().title()
     game.window.title("Good luck "+ game.userInfo.name +"!")
 
     clearWindow(game.window)
@@ -101,7 +102,7 @@ def main():
     print(game.currentWordList)
 
 
-    introText = "Welcome " + game.userInfo.name + "! Get ready for a spelling bee! Make words from the available letters, but all words much use the center letter. If you are not " + game.userInfo.name +", enter your name in the box below."
+    introText = "Welcome back " + game.userInfo.name + "! Get ready for a spelling bee! Make words from the available letters, but all words much use the center letter. If you are not " + game.userInfo.name +", enter your name in the box below."
 
     # add an instructions label 
     instructions = tk.Label(game.window, text = introText, font = ('Helvetica', 20), wraplength = 600, padx = 100) 
