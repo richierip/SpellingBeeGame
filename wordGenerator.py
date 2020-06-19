@@ -7,6 +7,7 @@ DICT_FILE = 'data/small_dict.txt'
 DEF_FILE = 'data/azdictionary.txt'
 
 
+
 def addedToDictionary(newWord):
     try:
         outF = open(DICT_FILE, "a")
@@ -84,7 +85,7 @@ def getWords():
 
     dataset2 = []
     fileName = DEF_FILE
-    with open(fileName, newline = '') as file:
+    with open(fileName, encoding="utf8", errors='ignore', newline = '') as file:
         definition = ""
         for line in file:
             if line == "\n":
