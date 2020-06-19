@@ -20,6 +20,20 @@ def clearWindow(window):
         for l in list:
             l.destroy()
 
+def center(toplevel):
+    toplevel.update_idletasks()
+
+    # Tkinter way to find the screen resolution
+    screen_width = toplevel.winfo_screenwidth()
+    screen_height = toplevel.winfo_screenheight()
+
+
+    size = tuple(int(_) for _ in toplevel.geometry().split('+')[0].split('x'))
+    x = screen_width/2 - size[0]/2
+    y = screen_height/2 - size[1]/2
+
+    toplevel.geometry("+%d+%d" % (x, y))  
+
 def startGame(event):
     global game
 
@@ -82,6 +96,7 @@ def main():
     game.window.title("Welcome to Spelling Bee for Kids!")
     game.window.option_add('*tearOff', False)
     game.window.geometry(str(WIDTH)+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
+    center(game.window)
     game.WIDTH = WIDTH
     game.HEIGHT = HEIGHT
 
