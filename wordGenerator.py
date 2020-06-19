@@ -3,7 +3,7 @@
 import random
 MIN_WORD_SIZE = 3
 MIN_WORDS_REQUIRED = 25
-DICT_FILE = 'data\small_dict.txt'
+DICT_FILE = 'data/small_dict.txt'
 DEF_FILE = 'data/azdictionary.txt'
 
 
