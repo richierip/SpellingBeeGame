@@ -11,7 +11,7 @@ from Game import myGame
 
 game = None 
 HEIGHT = 690
-WIDTH = 900 # 996 for golden ratio size
+WIDTH = 980 # 996 for golden ratio size
 myName = "" 
 
 
@@ -44,16 +44,19 @@ def startGame(event):
 
     clearWindow(game.window)
 
-    # Text input code
-    game.textInput = tk.Entry(game.window,width=10,font=(game.FONT_SELECT, '36'))
+    # Text input code and enter icon
+    game.textInput = tk.Entry(game.window,width=10,font=(game.FONT_SELECT, '36'), borderwidth = 0, highlightthickness=0)
     game.textInput.focus() 
+    icon = tk.PhotoImage(file = 'data/enter.gif')
+    game.enterIcon = tk.Label(game.window, image = icon, bg = "purple", padx = 0, highlightthickness=0,bd=0)
+    game.enterIcon.image = icon # Need this
 
     # Score label code
     game.scoreLabel = tk.Label(game.window, text="SCORE: " + str(int(game.SCORE)), fg='Black', bg='yellow',font=(game.FONT_SELECT, '36'))
 
     # Bee pic code
     game.beePic = tk.PhotoImage(file = 'data/bee2.gif')
-    game.beeLabel = tk.Label(game.window, image = game.beePic)
+    game.beeLabel = tk.Label(game.window, image = game.beePic, padx = 5)
 
     # Honey pics starter code
     game.honeyPic = tk.PhotoImage(file = 'data/honey0_8.gif')
@@ -78,12 +81,13 @@ def main():
 
     # Generic tkinter setup
     window = tk.Tk()
-    hexCanvas = Canvas(window, width=360, height=360)#, bg = 'purple')
-    honeyFrame = Frame(window, width=800, height=200)#, bg = 'blue') #TODO something with colors needs to change 
-    wordFrame = Frame(window, width=500, height=360)#, bg = 'red')
+    hexCanvas = Canvas(window, width=360, height=360, bg = 'green')
+    honeyFrame = Frame(window, width=800, height=200, bg = 'blue') #TODO something with colors needs to change 
+    wordFrame = Frame(window, width=500, height=360, bg = 'red')
 
     words, defList = getWords()
     keyletter, letterSet = getLetterset(words)
+
     print("\n Searching for letters in ", len(words), "words... \n")
     currentWordList = check(words, keyletter, letterSet)
 
@@ -100,13 +104,9 @@ def main():
     game.WIDTH = WIDTH
     game.HEIGHT = HEIGHT
 
-    # Create button tags
-    buttonNamesArray = []
-    for i in range(7):
-        buttonNamesArray.append("playbutton"+str(i+1))
     # Add buttons to canvas
     letterSet = convertToUpper(letterSet)
-    game.makeHexArray(letterSet, 180, 180, 60, buttonNamesArray)
+    game.makeHexArray(letterSet, 180, 180, 60)
 
     #print("$$$$$$$$$$$$")
     #print(game.window.tk.call('tk', 'windowingsystem'))

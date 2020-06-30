@@ -36,6 +36,8 @@ class myGame:
         self.beeLabel = None
         self.beePic = None
         self.honeyPic = None
+        self.shuffleIcon = None
+        self.enterIcon = None
         self.customLabel = None
 
         # Pickle user values. put in new class in a bit
@@ -49,21 +51,48 @@ class myGame:
 
     def makeHexButton(self, letter, offsetx, offsety, sidelength, tagName):
 
-        playbutton = self.hexCanvas.create_polygon(sidelength+offsetx,offsety, (sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, 
+        self.hexCanvas.create_polygon(sidelength+offsetx,offsety, (sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, 
                                         (-sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, (-sidelength)+offsetx,offsety,  
                                         (-sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, (sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, 
                                         fill = 'gray', outline = 'black', tags=tagName)
-        playtext = self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill='yellow',tags=tagName)
+        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill='yellow',tags=tagName)
 
     def makeHexCenterButton(self, letter, offsetx, offsety, sidelength, tagName):
 
-        playbutton = self.hexCanvas.create_polygon(sidelength+offsetx,offsety, (sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, 
+        self.hexCanvas.create_polygon(sidelength+offsetx,offsety, (sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, 
                                         (-sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, (-sidelength)+offsetx,offsety,  
                                         (-sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, (sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, 
                                         fill = 'yellow', outline = 'white', tags=tagName)
-        playtext = self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill='black',tags=tagName)
+        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill='black',tags=tagName)
 
-    def makeHexArray(self, letters, centerX, centerY, sidelength, tagNames ):
+    def shuffle(self, event):
+        for item in self.hexCanvas.find_all(): 
+            self.hexCanvas.delete(item) # Delete each item on the canvas
+
+        centerLetter = self.letterSet[0]
+        others = self.letterSet[1:]
+        random.shuffle(others) # Rearrage everything except the center letter
+        others.insert(0, centerLetter)
+        self.letterSet = others # Important to set the class value
+        self.makeHexArray(convertToUpper(others), 180, 180, 60) # Presets copied from main()  
+    
+    def makeShuffleCircle(self):
+        
+        self.shuffleIcon = icon = tk.PhotoImage(file = 'data/refresh-icon.gif') # Have to do this to prevent garbage collection
+        myWidth = int(self.hexCanvas.cget("width"))
+        circumference = myWidth / 8
+
+        self.hexCanvas.create_oval(myWidth - circumference, 5 , myWidth, circumference + 5, fill = 'white', outline = 'black', tags = 'shuffle')
+        #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill='black',tags='shuffle')
+        self.hexCanvas.create_image((myWidth - (circumference/2), 5 + circumference/2), image = self.shuffleIcon ,tags='shuffle')
+
+    def makeHexArray(self, letters, centerX, centerY, sidelength):
+        self.makeShuffleCircle()
+
+        # Create button tags
+        tagNames = []
+        for i in range(7):
+            tagNames.append("playbutton"+str(i+1))
         
         d1 = (math.sqrt(3)*sidelength)/2
         h = (2*d1) * math.sin(math.radians(30))
@@ -121,17 +150,14 @@ class myGame:
         return totalFound * scalar
 
     def updateHoney(self, score):
-        maxScore = 1000 # subject to change so coding relative to this
+        maxScore = 1000 # subject to change so coding relative to this #TODO
         if score <= maxScore/4: # Only draw one jar
             conversion = 8 * (score / (maxScore/4))
-            #print(" Initial calculation :",conversion)
             conversion = int(conversion)
-            #print(" Now an int :",conversion)
             choice = 'data/honey' + str(conversion) +'_8.gif'
-            #print(" Chosen picture is : ", choice)
             newPic = tk.PhotoImage(file =choice)
             self.honey1Label.configure(image = newPic)
-            self.honey1Label.image = newPic
+            self.honey1Label.image = newPic # Seems redundant, but needed to stop garbage collection
             self.honey1Label.grid(column=1,row=1)
 
         elif score <= maxScore/2: # Draw two jars
@@ -212,16 +238,18 @@ class myGame:
         self.hexCanvas.tag_bind("playbutton5","<Button-1>",self.clicked5)
         self.hexCanvas.tag_bind("playbutton6","<Button-1>",self.clicked6)
         self.hexCanvas.tag_bind("playbutton7","<Button-1>",self.clicked7)
+        self.hexCanvas.tag_bind("shuffle","<Button-1>",self.shuffle)
         self.window.bind('<Return>', self.enterWord) 
 
     def drawWidgets(self):
         self.beeLabel.grid(column = 1, row = 1)
         self.textInput.grid(column = 2, row = 1)
-        self.scoreLabel.grid(column=3, row= 1)
+        self.enterIcon.grid(column = 3,row = 1)
+        self.scoreLabel.grid(column=4, row= 1)
         self.hexCanvas.grid(column = 1, row = 2, columnspan = 2, padx = 50)
         #honeyFrame.grid(column = 3, row = 2)
-        self.honeyFrame.grid(column = 1, row = 3, columnspan = 3, padx = 30)
-        self.wordFrame.grid(column = 3, row = 2, columnspan = 2)
+        self.honeyFrame.grid(column = 1, row = 3, columnspan = 4, padx = 30)
+        self.wordFrame.grid(column = 3, row = 2, columnspan = 3)
         #testFrame.grid(column = 1, row = 3, columnspan = 3)
 
         #These are drawn INSIDE the honeyFrame, has its own gridding system

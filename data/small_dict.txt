@@ -38299,7 +38299,6 @@ coleslaw's
 coleus
 coleus's
 coleuses
-coley
 coleys
 colic
 colic's
@@ -38568,7 +38567,6 @@ columnist
 columnist's
 columnists
 columns
-com
 coma
 coma's
 comaker
@@ -38691,7 +38689,6 @@ coming's
 comings
 comity
 comity's
-comm
 comma
 comma's
 command
@@ -41168,7 +41165,6 @@ corpuscle
 corpuscle's
 corpuscles
 corpuscular
-corr
 corral
 corral's
 corralled
@@ -48380,7 +48376,6 @@ dogtrotting
 dogwood
 dogwood's
 dogwoods
-doh
 doh's
 doilies
 doily
@@ -50044,7 +50039,6 @@ eclogue's
 eclogues
 ecocide
 ecocide's
-ecol
 ecologic
 ecological
 ecologically
@@ -53240,7 +53234,6 @@ exotically
 exoticism
 exoticism's
 exotics
-exp
 expand
 expandable
 expanded
@@ -56488,7 +56481,6 @@ foist
 foisted
 foisting
 foists
-fol
 fold
 fold's
 foldaway
@@ -56532,7 +56524,6 @@ folktales
 folkway
 folkway's
 folkways
-foll
 follicle
 follicle's
 follicles
@@ -64188,7 +64179,6 @@ homosexual's
 homosexuality
 homosexuality's
 homosexuals
-hon
 hon's
 honcho
 honcho's
@@ -67791,7 +67781,6 @@ initiator
 initiator's
 initiators
 initiatory
-initio
 inject
 injected
 injecting
@@ -70064,7 +70053,6 @@ joggled
 joggles
 joggling
 jogs
-john
 john's
 johnnies
 johnny
@@ -72928,7 +72916,6 @@ lilac's
 lilacs
 lilies
 lilliputian
-lilo
 lilos
 lilt
 lilt's
@@ -73112,7 +73099,6 @@ linkups
 linnet
 linnet's
 linnets
-lino
 linoleum
 linoleum's
 linseed
@@ -82347,7 +82333,6 @@ oceans
 ocelot
 ocelot's
 ocelots
-och
 ocher
 ocher's
 ocker
@@ -82562,7 +82547,6 @@ ohmmeter
 ohmmeter's
 ohmmeters
 ohms
-oho
 ohs
 oi
 oik
@@ -82623,13 +82607,11 @@ oldness's
 oldster
 oldster's
 oldsters
-ole
 ole's
 oleaginous
 oleander
 oleander's
 oleanders
-oleo
 oleo's
 oleomargarine
 oleomargarine's
@@ -82774,7 +82756,6 @@ onyx's
 onyxes
 oodles
 oodles's
-ooh
 oohed
 oohing
 oohs
@@ -92759,7 +92740,6 @@ pythons
 pyx
 pyx's
 pyxes
-pzazz
 q
 qr
 qt
@@ -110321,14 +110301,12 @@ superwoman's
 superwomen
 supine
 supinely
-supp
 supped
 supper
 supper's
 suppers
 suppertime
 supping
-suppl
 supplant
 supplanted
 supplanting
@@ -113123,7 +113101,6 @@ thistledown
 thistledown's
 thistles
 thither
-tho
 thole
 thole's
 tholes
@@ -114087,7 +114064,6 @@ tollway's
 tollways
 toluene
 toluene's
-tom
 tom's
 tomahawk
 tomahawk's
@@ -118994,7 +118970,6 @@ usherettes
 ushering
 ushers
 using
-usu
 usual
 usual's
 usually
@@ -123741,7 +123716,6 @@ youthfully
 youthfulness
 youthfulness's
 youths
-yow
 yowl
 yowl's
 yowled
