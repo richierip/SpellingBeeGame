@@ -38,6 +38,7 @@ class myGame:
         self.honeyPic = None
         self.shuffleIcon = None
         self.enterIcon = None
+        self.deleteIcon = None
         self.customLabel = None
 
         # Pickle user values. put in new class in a bit
@@ -65,6 +66,19 @@ class myGame:
                                         fill = 'yellow', outline = 'white', tags=tagName)
         self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill='black',tags=tagName)
 
+    def deleteFromEntry(self, entry):
+        txt = self.textInput.get()[:-1]
+        self.textInput.delete(0, tk.END)
+        self.textInput.insert(0, txt)
+
+    def makeDeleteCircle(self):
+        self.deleteIcon = icon = tk.PhotoImage(file = 'data/left-arrow.gif') # Have to do this to prevent garbage collection
+        myWidth = int(self.hexCanvas.cget("width"))
+        circumference = myWidth / 8
+        self.hexCanvas.create_oval(3, 5 , circumference + 3, circumference + 5, fill = 'white', outline = 'black', tags = 'delete')
+        #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill='black',tags='shuffle')
+        self.hexCanvas.create_image((3 + circumference/2, (5 + circumference/2)), image = self.deleteIcon ,tags='delete')
+
     def shuffle(self, event):
         for item in self.hexCanvas.find_all(): 
             self.hexCanvas.delete(item) # Delete each item on the canvas
@@ -87,6 +101,7 @@ class myGame:
         self.hexCanvas.create_image((myWidth - (circumference/2), 5 + circumference/2), image = self.shuffleIcon ,tags='shuffle')
 
     def makeHexArray(self, letters, centerX, centerY, sidelength):
+        self.makeDeleteCircle()
         self.makeShuffleCircle()
 
         # Create button tags
@@ -239,16 +254,18 @@ class myGame:
         self.hexCanvas.tag_bind("playbutton6","<Button-1>",self.clicked6)
         self.hexCanvas.tag_bind("playbutton7","<Button-1>",self.clicked7)
         self.hexCanvas.tag_bind("shuffle","<Button-1>",self.shuffle)
+        self.hexCanvas.tag_bind("delete","<Button-1>",self.deleteFromEntry)
         self.window.bind('<Return>', self.enterWord) 
+        self.enterIcon.bind("<Button-1>", self.enterWord) 
 
     def drawWidgets(self):
         self.beeLabel.grid(column = 1, row = 1)
         self.textInput.grid(column = 2, row = 1)
         self.enterIcon.grid(column = 3,row = 1)
         self.scoreLabel.grid(column=4, row= 1)
-        self.hexCanvas.grid(column = 1, row = 2, columnspan = 2, padx = 50)
+        self.hexCanvas.grid(column = 1, row = 2, columnspan = 2)#, padx = 50)
         #honeyFrame.grid(column = 3, row = 2)
-        self.honeyFrame.grid(column = 1, row = 3, columnspan = 4, padx = 30)
+        self.honeyFrame.grid(column = 1, row = 3, columnspan = 4)#, padx = 30)
         self.wordFrame.grid(column = 3, row = 2, columnspan = 3)
         #testFrame.grid(column = 1, row = 3, columnspan = 3)
 
