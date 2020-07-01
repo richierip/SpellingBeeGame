@@ -11,11 +11,12 @@
 import pickle
 
 class userPresets:
-    def __init__(self, name, color1, color2, highScoreTable):
+    def __init__(self, name, color1, color2, highScoreTable, allTimeTable):
         self.name = name
         self.color1 = color1
         self.color2 = color2
         self.highScoreTable = highScoreTable
+        self.allTimeTable = allTimeTable
 
 def storeObject(obj, filename):
     try:

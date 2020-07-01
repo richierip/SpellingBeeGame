@@ -8,6 +8,7 @@ from tkinter import Canvas
 from tkinter import Frame
 from wordGenerator import *
 import StoreAndLoad
+#import interface
 
 class myGame:
     def __init__(self, window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList):
@@ -18,6 +19,7 @@ class myGame:
         self.textInput = None
         self.FONT_SELECT = 'Comic Sans'
         self.SCORE = 0
+        self.hintPenalty = 0
         self.ORIGINAL_LETTER_COUNT = 0
         self.FOUND = []
         self.defList = defList
@@ -44,9 +46,10 @@ class myGame:
         # Pickle user values. put in new class in a bit
         self.userInfo = StoreAndLoad.loadObject('data/userInfo')
     
+    # If no data yet (first time running the game), this is the default user
     def checkUser(self):
         if self.userInfo == None:
-            self.userInfo = StoreAndLoad.userPresets('Ken', 'Yellow', 'Black', [])
+            self.userInfo = StoreAndLoad.userPresets('Ken', 'Yellow', 'Black', [], [])
         else:
             pass
 
@@ -159,10 +162,14 @@ class myGame:
         return count
 
     # Maps score out of 1000 possible. Maybe do something else?
-    def updateScore(self, currentWordList):
-        totalFound = self.ORIGINAL_LETTER_COUNT - self.countChars(currentWordList)
-        scalar = 1000 / self.ORIGINAL_LETTER_COUNT
-        return totalFound * scalar
+    def updateScore(self):
+        totalFound = self.ORIGINAL_LETTER_COUNT - self.countChars(self.currentWordList)
+        scalar = 1000 / self.ORIGINAL_LETTER_COUNT # Max score considered 1000 here
+        self.SCORE = (totalFound * scalar) - self.hintPenalty
+
+        self.scoreLabel.configure(text="SCORE: " + str(int(self.SCORE)))
+        print("SCORE is : ", self.SCORE)
+        self.updateHoney(self.SCORE)
 
     def updateHoney(self, score):
         maxScore = 1000 # subject to change so coding relative to this #TODO
@@ -233,16 +240,15 @@ class myGame:
             self.updateWordFrame()
             
             #TODO UPDATE SCORE
-            self.SCORE = self.updateScore(self.currentWordList)
-            self.scoreLabel.configure(text="SCORE: " + str(int(self.SCORE)))
-            print("SCORE is : ", self.SCORE)
-            self.updateHoney(self.SCORE)
+            self.updateScore()
         else:
             print("DARN!") 
         self.textInput.selection_clear()
         self.textInput.delete(0,tk.END)
 
         if self.SCORE >=999:
+            if self.SCORE < 1000:
+                self.SCORE = 1000
             self.endGame()
 
     def makeBindings(self):
@@ -285,18 +291,22 @@ class myGame:
         for l in list:
             l.destroy()
 
-    def endGame(self):
-        self.userInfo.highScoreTable.append((self.userInfo.name, int(self.SCORE )))
-        self.userInfo.highScoreTable.sort(key=lambda x: x[1], reverse = True)
+    # Helper fxn to grab table length up to 15 entries
+    def getProperLength(self, length):
+        if length < 15:
+            return length
+        else:
+            return 15
 
-        # Clear everything, delete the Endgame menu option
-        self.clearWindow()
-        self.rootMenu.delete(3) # THIS NEEDS TO BE THE LAST ITEM IN THE MENU OR ELSE
-        endFrame = Frame(self.window, width=400, height =  self.HEIGHT)
+    def createHSFrame(self, parent, w, h):
+        highScoreFrame = Frame(parent, width=w, height = h)
         #self.beeLabel.grid(column = 0, row = 2)
+        
+        # Display the leaderboard title
+        displayLabel = tk.Label(highScoreFrame, text= "Single-Game Leaderboard", fg='black',font=(self.FONT_SELECT, '20'), width = 20, relief = 'groove')
+        displayLabel.grid(row = 0, column = 0, columnspan = 3)
 
-
-        for i in range(len(self.userInfo.highScoreTable)):
+        for i in range(self.getProperLength(len(self.userInfo.highScoreTable))): #Picking the top 15 instead of len(self.userInfo.highScoreTable)
             if i % 2 ==0:
                 bgColor = 'black'
                 textColor = 'white'
@@ -305,14 +315,136 @@ class myGame:
                 textColor = 'black'
 
             currentObject = self.userInfo.highScoreTable[i]
-
+            if int(self.SCORE) == currentObject[1] and self.userInfo.name == currentObject[0]:
+                textColor = 'green' # Highlight the score for the game that just happened
+            # For each row, name and associated score get own label, placed next to each other, with the same color scheme
+            displayLabel = tk.Label(highScoreFrame, text= str(i+1) + "." , bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 5)
+            displayLabel.grid(column = 0, row = i+1)
             for j in range(len(currentObject)):
                 if j ==1:
-                    displayLabel = tk.Label(endFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 20)
+                    displayLabel = tk.Label(highScoreFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 20)
                 else:
-                    displayLabel = tk.Label(endFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 10)
-                displayLabel.grid(column = j, row = i+1)
-        endFrame.pack()
+                    displayLabel = tk.Label(highScoreFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 10)
+                displayLabel.grid(column = j+1, row = i+1)
+
+        # Even if they're out of the top 15 put them on the list at the end
+        if len(self.userInfo.highScoreTable) > 15 and self.SCORE < self.userInfo.highScoreTable[14][1]:
+            # Find position in the table:
+            pos = 0
+            for i in range(len(self.userInfo.highScoreTable)):
+                if int(self.SCORE) == self.userInfo.highScoreTable[i][1]:
+                    pos = i
+                    break
+            
+            displayLabel = tk.Label(highScoreFrame, text= str(pos+1) + ".", bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 5, pady = 5)
+            displayLabel.grid(column = 0, row = 16)
+            displayLabel = tk.Label(highScoreFrame, text= self.userInfo.name, bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 10, pady = 5)
+            displayLabel.grid(column = 1, row = 16)
+            displayLabel = tk.Label(highScoreFrame, text= str(int(self.SCORE)), bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 20, pady = 5)
+            displayLabel.grid(column = 2, row = 16)
+
+        return highScoreFrame
+
+    def createATFrame(self, parent, w, h, allTimeScore):
+        allTimeFrame = Frame(parent, width=w, height = h)
+
+        # Display the leaderboard title
+        displayLabel = tk.Label(allTimeFrame, text= "All Time Leaderboard",fg='black',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove' )
+        displayLabel.grid(row = 0, column = 0, columnspan = 3)
+
+        # Go through the all time array
+        for i in range(self.getProperLength(len(self.userInfo.allTimeTable))): 
+            if i % 2 ==0:
+                bgColor = 'black'
+                textColor = 'white'
+            else:
+                bgColor = 'white'
+                textColor = 'black'
+
+            currentObject = self.userInfo.allTimeTable[i]
+            if self.userInfo.name == currentObject[0]:
+                textColor = 'green' # Highlight your profile's score
+            # For each row, name and associated score get own label, placed next to each other, with the same color scheme
+            displayLabel = tk.Label(allTimeFrame, text= str(i+1) + "." , bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 5)
+            displayLabel.grid(column = 0, row = i+1)
+            for j in range(len(currentObject)):
+                if j ==1:
+                    displayLabel = tk.Label(allTimeFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 20)
+                else:
+                    displayLabel = tk.Label(allTimeFrame, text= currentObject[j], bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 10)
+                displayLabel.grid(column = j+1, row = i+1)
+        
+        # Even if they're out of the top 15 put them on the list at the end 
+        if len(self.userInfo.allTimeTable) > 15 and allTimeScore < self.userInfo.allTimeTable[14][1]:
+            # Find position in the table:
+            pos = 0
+            for i in range(len(self.userInfo.allTimeTable)):
+                if allTimeScore == self.userInfo.allTimeTable[i][1]:
+                    pos = i
+                    break
+            displayLabel = tk.Label(allTimeFrame, text= str(pos+1) + "." , bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 5, pady = 5)
+            displayLabel.grid(column = 0, row = 16)
+
+            displayLabel = tk.Label(allTimeFrame, text= self.userInfo.name, bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 10, pady = 5)
+            displayLabel.grid(column = 1, row = 16)
+            displayLabel = tk.Label(allTimeFrame, text= str(allTimeScore), bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 20, pady = 5)
+            displayLabel.grid(column = 2, row = 16)
+
+        return allTimeFrame
+    
+    def startOver(self, event):
+        self.window.destroy()
+        import interface
+        interface.init()
+
+    def endGame(self):
+        # Add current user's score to the high score table, and re-sort it
+        self.userInfo.highScoreTable.append((self.userInfo.name, int(self.SCORE )))
+        self.userInfo.highScoreTable.sort(key=lambda x: x[1], reverse = True)
+
+        # Add current user's score to their row in the all time table, or create a new row if needed, and re-sort it
+        found = False
+        allTimeScore = 0
+        for i in range(len(self.userInfo.allTimeTable)):
+            if self.userInfo.allTimeTable[i][0] != self.userInfo.name:
+                continue
+            else:
+                # Have to reconstruct tuple for some reason
+                allTimeScore = self.userInfo.allTimeTable[i][1] + int(self.SCORE)
+                self.userInfo.allTimeTable[i] = (self.userInfo.allTimeTable[i][0],allTimeScore) 
+                found = True
+                break
+        if not found:
+            allTimeScore = int(self.SCORE)
+            self.userInfo.allTimeTable.append((self.userInfo.name, int(self.SCORE )))
+        self.userInfo.allTimeTable.sort(key=lambda x: x[1], reverse = True)
+
+        # Clear everything, delete the Endgame menu option
+        self.clearWindow()
+        self.rootMenu.delete(4) # THIS NEEDS TO BE THE LAST ITEM IN THE MENU OR ELSE
+        
+        leaderboardsFrame = Frame(self.window, width=880, height = self.HEIGHT )
+        highScoreFrame = self.createHSFrame(leaderboardsFrame, 400, self.HEIGHT)
+        allTimeFrame = self.createATFrame(leaderboardsFrame, 400, self.HEIGHT, allTimeScore)
+        buttonFrame = Frame(self.window, width=880, height = 100 , pady = 45)
+
+        # Initialize and grid buttons in their frame
+        solutionButton = tk.Label(buttonFrame, text= "Show Solution",fg='black',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5 )
+        solutionButton.grid(row = 0, column = 0, padx = 15)
+        playAgainButton = tk.Label(buttonFrame, text= "Play Again",fg='black',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5  )
+        playAgainButton.grid(row = 0, column = 1, padx = 15)
+
+        # Bindings for buttons
+        #solutionButton.bind("<Button-1>", self.showSolution) 
+        playAgainButton.bind("<Button-1>", self.startOver) 
+        
+        # High score on the left, all time on the right
+        highScoreFrame.grid(row = 1, column = 1, padx = 35)
+        allTimeFrame.grid(row = 1, column = 2, padx = 35)
+        leaderboardsFrame.pack()
+        buttonFrame.pack()
+
+        # Use Pickle to store the tables persistently
         StoreAndLoad.storeObject(self.userInfo, 'data/userInfo')
 
 
@@ -323,7 +455,10 @@ class myGame:
     #TODO something with style consistency in here
 
     def displayDefinition(self, word):
-        defArray = lookup(self.defList, word)
+        result = lookup(self.defList, word)
+        defArray = result[0]
+        word = result[1]
+
         print("Definition : ", defArray)
         w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
         w.title("Dictionary" )
@@ -401,7 +536,7 @@ class myGame:
         if isValid:
             self.currentWordList.append(word)
             self.ORIGINAL_LETTER_COUNT += len(word)
-            self.SCORE = self.updateScore(self.currentWordList)
+            self.updateScore()
 
         if addedToDictionary(word):
             message = "Success! You have added " + word +" to the dictionary."
@@ -440,7 +575,7 @@ class myGame:
         if word in self.currentWordList:
             self.currentWordList.remove(word)
             self.ORIGINAL_LETTER_COUNT -= len(word)
-            self.SCORE = self.updateScore(self.currentWordList)
+            self.updateScore()
 
         if removedFromDictionary(word):
             message = "Success! You have removed " + word +" from the dictionary."
@@ -468,8 +603,63 @@ class myGame:
         popupTextInput.focus() 
         popupTextInput.pack()
 
-        
-        
+    def hintHandler(self):
+        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
+        w.title("Need some help?")
+
+        # Put the bee there I guess 
+        beeLabel2 = tk.Label(w, image = self.beePic)
+        beeLabel2.pack()
+
+        # Choose a random word
+        candidates = copy.copy(self.currentWordList)
+
+        # Find a word that has an acceptable definition to give as a hint, if there is one
+        for i in range(len(candidates)):
+            choice = random.choice(candidates)
+            candidates.remove(choice)
+
+            #Find a definition and possibly modified keyword
+            result = lookup(self.defList, choice)
+            defArray = result[0]
+            if defArray == []: # Nothing to check if the dictionary has no results
+                continue 
+            choice = result[1].title()
+
+            # Trim each definition : remove index words, or whole entry if the word is used in the entry (too easy to solve then)
+            approvedDefinitions = []
+            for line in defArray:
+                    line = line.replace(choice, '')
+                    if choice.lower() not in line:
+                        approvedDefinitions.append(line)
+            
+            if approvedDefinitions != []:
+                break
+
+        # if no definition, print an anagram? For now, do nothing
+        if defArray == []:
+            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg='Black',font=(self.FONT_SELECT, '14'))
+            displayLabel.pack()
+
+        else:
+            # Dock some points
+            self.hintPenalty += self.SCORE/15 #TODO decide appropriate penalty
+
+            # Make and pack the labels
+            if len(defArray) == 1:
+                message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for a definition of a word you haven't found yet : "
+            else:
+                message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for these definition of a word you haven't found yet : "
+
+            displayLabel = tk.Label(w, text= message, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+            displayLabel.pack()
+
+            for line in approvedDefinitions: # Each line is a definition, already parsed and proofread
+                displayLabel = tk.Label(w, text= line, fg='Black',font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
+                displayLabel.pack()
+            # Finally, update the score display and honey jars
+            self.updateScore()
+     
 
     def makeMenu(self):
         self.rootMenu = Menu(self.window)
@@ -480,6 +670,7 @@ class myGame:
         self.rootMenu.add_cascade(label='File', menu=new_item)
         self.rootMenu.add_cascade(label='Add a word to the dictionary',command = self.addHandler)
         self.rootMenu.add_cascade(label='Remove a word from the dictionary',command = self.removeHandler)
+        self.rootMenu.add_cascade(label='Hint',command = self.hintHandler)
         self.rootMenu.add_cascade(label='End Game',command = self.endGame)
         self.window.config(menu=self.rootMenu)
 

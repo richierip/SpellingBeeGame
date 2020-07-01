@@ -77,7 +77,7 @@ def startGame(event):
 
     game.makeMenu()
 
-def main():
+def init():
 
     # Generic tkinter setup
     window = tk.Tk()
@@ -136,6 +136,8 @@ def main():
     #Start the GUI
     window.mainloop()
 
+def main():
+    init()
 
 if __name__ == '__main__':
     main()

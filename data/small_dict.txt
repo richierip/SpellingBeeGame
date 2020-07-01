@@ -59123,7 +59123,6 @@ geodesy
 geodesy's
 geodetic
 geoengineering
-geog
 geographer
 geographer's
 geographers

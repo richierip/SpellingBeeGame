@@ -1,0 +1,33 @@
+get options going 
+	color scheme shit (switch to rgb?)
+	Difficulty settings on intro page
+
+Tweak intro screen explanation
+
+Print out words missed?
+
+Sizing of definitions buttons needs work
+
+indication of valid or invalid word?
+
+
+lookup fix. 'talked' should search for 'talk' for example
+
+Fix menu bar for mac - wtf is going on
+
+**cosmetics**
+
+Have buttons change color when hovered over
+	active images?
+
+New bee pics -> evil looking one for hint?
+
+make the lookup smarter? ie separate out nouns, verbs, adj and find a couple of each
+
+Dynamic sizing for everything?
+Window sizing / placement on the screen (also for popups)
+
+Clean up dictionary
+
+
+remember to push to git after every fix

@@ -137,7 +137,7 @@ def lookup(fullDict, word):
         if word[-1] == 's':
             word = word[:-1]
             found = lookup(fullDict, word)
-    return found
+    return [found,word]
 
 def check(words, keyletter, otherletters):
     found = []
