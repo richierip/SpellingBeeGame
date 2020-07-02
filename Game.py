@@ -561,8 +561,9 @@ class myGame:
 
         #Regrid everything with new bindings   #TODO dynamically size the text?
         num = math.ceil(math.sqrt(len(self.FOUND)))
+        fontSize = str(int(10/num + 18 ))
         for i in range(len(self.FOUND)):
-            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx,font=(self.FONT_SELECT, '20'), padx = 4, pady = 3)
+            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx,font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
             #print("current lable column: ", int(i%num), ", row: ", int(i/num))
             self.customLabel.grid(row = int(i%num), column = int(i/num))
