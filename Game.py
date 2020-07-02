@@ -38,6 +38,8 @@ class myGame:
         self.beeLabel = None
         self.beePic = None
         self.honeyPic = None
+        self.difficultyPic = None
+        self.difficultyLabel = None
         self.shuffleIcon = None
         self.enterIcon = None
         self.deleteIcon = None
@@ -505,7 +507,6 @@ class myGame:
         w.focus()
 
         # Put the bee there I guess
-        #beeImg2 = tk.PhotoImage(file = 'data/bee2.gif')
         beeLabel2 = tk.Label(w, image = self.beePic)
         beeLabel2.pack()
 

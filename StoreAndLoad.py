@@ -1,13 +1,5 @@
 ''' This file holds the user controlled information and methods to store that info persistently'''
 
-# import random, copy, math
-# import tkinter as tk
-# from tkinter import scrolledtext
-# from tkinter import Menu
-# from tkinter import Canvas
-# from tkinter import Frame
-# from wordGenerator import *
-
 import pickle
 
 class userPresets:
@@ -17,6 +9,7 @@ class userPresets:
         self.color2 = color2
         self.highScoreTable = highScoreTable
         self.allTimeTable = allTimeTable
+        self.difficulty = 'Easy'
 
 def storeObject(obj, filename):
     try:

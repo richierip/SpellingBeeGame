@@ -7,7 +7,6 @@ DICT_FILE = 'data/small_dict.txt'
 DEF_FILE = 'data/azdictionary.txt'
 
 
-
 def addedToDictionary(newWord):
     try:
         outF = open(DICT_FILE, "a")
