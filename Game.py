@@ -246,7 +246,7 @@ class myGame:
         self.textInput.selection_clear()
         self.textInput.delete(0,tk.END)
 
-        if self.SCORE >=999:
+        if self.currentWordList == []:
             if self.SCORE < 1000:
                 self.SCORE = 1000
             self.endGame()
@@ -397,6 +397,46 @@ class myGame:
         import interface
         interface.init()
 
+    def showSolution(self, event):
+        import scrollableFrame
+        # Create new window and necesary Frames and scrollbar
+        w = tk.Toplevel(width = self.WIDTH/2, height = 2*self.HEIGHT/3, takefocus = True)
+        w.title("Puzzle Solution")
+        masterFrame = Frame(w, width = self.WIDTH/2, height = 2*self.HEIGHT/3)
+        foundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3)
+        notFoundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3)
+
+        def _on_mousewheel(event):
+            x,y = masterFrame.winfo_pointerxy()
+            widget = masterFrame.winfo_containing(x,y)
+            widget.yview_scroll(int(-1*(event.delta/12)), "units")
+        w.bind_all("<MouseWheel>", _on_mousewheel)
+
+        # Create labels for every word and put them in the appropriate Frame
+        for word in self.FOUND:
+            displayLabel = tk.Label(foundFrame.scrollable_frame, text= word, fg='Black',font=(self.FONT_SELECT, '14'), pady = 5) 
+            displayLabel.pack()
+
+        for word in self.currentWordList:
+            displayLabel = tk.Label(notFoundFrame.scrollable_frame, text= word, fg='Black',font=(self.FONT_SELECT, '14'), pady = 5) 
+            displayLabel.pack()
+
+        # Put the bee there I guess 
+        # beeLabel2 = tk.Label(w, image = self.beePic)
+        # beeLabel2.pack()
+
+        # Make and pack the Toplevel label and Frames
+        message = "You found " + str(len(self.FOUND)) + " out of " + str(len(self.FOUND) + len(self.currentWordList)) + " possible words. "
+        topLabel = tk.Label(w, text= message, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)
+        leftLabel = tk.Label(masterFrame, text= 'Found', fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 5) 
+        rightLabel = tk.Label(masterFrame, text= 'Not Found', fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)  
+        leftLabel.grid(row = 0, column = 0, padx = 10)
+        rightLabel.grid(row = 0, column = 1, padx = 10)
+        foundFrame.grid(row = 1, column = 0, padx = 10, sticky=tk.N)
+        notFoundFrame.grid(row = 1, column = 1, padx = 10, sticky=tk.N)
+        topLabel.pack()
+        masterFrame.pack()
+
     def endGame(self):
         # Add current user's score to the high score table, and re-sort it
         self.userInfo.highScoreTable.append((self.userInfo.name, int(self.SCORE )))
@@ -435,12 +475,12 @@ class myGame:
         playAgainButton.grid(row = 0, column = 1, padx = 15)
 
         # Bindings for buttons
-        #solutionButton.bind("<Button-1>", self.showSolution) 
+        solutionButton.bind("<Button-1>", self.showSolution) 
         playAgainButton.bind("<Button-1>", self.startOver) 
         
         # High score on the left, all time on the right
-        highScoreFrame.grid(row = 1, column = 1, padx = 35)
-        allTimeFrame.grid(row = 1, column = 2, padx = 35)
+        highScoreFrame.grid(row = 1, column = 1, padx = 35, sticky=tk.N)
+        allTimeFrame.grid(row = 1, column = 2, padx = 35, sticky=tk.N)
         leaderboardsFrame.pack()
         buttonFrame.pack()
 
