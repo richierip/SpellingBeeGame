@@ -9,7 +9,7 @@ class userPresets:
         self.color2 = color2
         self.highScoreTable = highScoreTable
         self.allTimeTable = allTimeTable
-        self.difficulty = 'Easy'
+        self.difficulty = 'Bee'
 
 def storeObject(obj, filename):
     try:

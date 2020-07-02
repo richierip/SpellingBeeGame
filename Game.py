@@ -11,18 +11,18 @@ import StoreAndLoad
 #import interface
 
 class myGame:
-    def __init__(self, window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList):
+    def __init__(self, window, hexCanvas, honeyFrame, wordFrame):
         self.WIDTH = None
         self.HEIGHT = None
-        self.letterSet = letterSet
-        self.currentWordList = currentWordList
+        self.letterSet = None
+        self.currentWordList = []
         self.textInput = None
         self.FONT_SELECT = 'Comic Sans'
         self.SCORE = 0
         self.hintPenalty = 0
         self.ORIGINAL_LETTER_COUNT = 0
         self.FOUND = []
-        self.defList = defList
+        self.defList = []
 
         self.window = window
         self.hexCanvas = hexCanvas
@@ -420,7 +420,7 @@ class myGame:
             displayLabel.pack()
 
         for word in self.currentWordList:
-            displayLabel = tk.Label(notFoundFrame.scrollable_frame, text= word, fg='Black',font=(self.FONT_SELECT, '14'), pady = 5) 
+            displayLabel = tk.Label(notFoundFrame.scrollable_frame, text= word.title(), fg='Black',font=(self.FONT_SELECT, '14'), pady = 5) 
             displayLabel.pack()
 
         # Put the bee there I guess 
@@ -461,9 +461,10 @@ class myGame:
             self.userInfo.allTimeTable.append((self.userInfo.name, int(self.SCORE )))
         self.userInfo.allTimeTable.sort(key=lambda x: x[1], reverse = True)
 
-        # Clear everything, delete the Endgame menu option
+        # Clear everything, delete the Endgame menu option and Hint option
         self.clearWindow()
         self.rootMenu.delete(4) # THIS NEEDS TO BE THE LAST ITEM IN THE MENU OR ELSE
+        self.rootMenu.delete(3) 
         
         leaderboardsFrame = Frame(self.window, width=880, height = self.HEIGHT )
         highScoreFrame = self.createHSFrame(leaderboardsFrame, 400, self.HEIGHT)

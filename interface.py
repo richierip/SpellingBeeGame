@@ -35,6 +35,24 @@ def center(toplevel):
 
 def startGame(event):
     global game
+    game.window.geometry(str(WIDTH)+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
+
+    words, game.defList = getWords()
+    keyletter, game.letterSet = getLetterset(words, game.userInfo.difficulty)
+
+    print("\n Searching for letters in ", len(words), "words... \n")
+    game.currentWordList = check(words, keyletter, game.letterSet)
+
+    # Add buttons to canvas
+    letterSet = convertToUpper(game.letterSet)
+    game.makeHexArray(letterSet, 180, 180, 60)
+
+    #print(game.window.tk.call('tk', 'windowingsystem'))
+    game.ORIGINAL_LETTER_COUNT = game.countChars(game.currentWordList)
+    
+    #currentWordList = sorted(currentWordList, key=len)
+    print("Found ", len(game.currentWordList), "words: ")
+    print(game.currentWordList)
 
     #  Replace name in Persistent Storage
     if event.widget.get() != "":
@@ -84,37 +102,18 @@ def init():
     honeyFrame = Frame(window, width=800, height=200)#, bg = 'blue') #TODO something with colors needs to change 
     wordFrame = Frame(window, width=500, height=360)#, bg = 'red')
 
-    words, defList = getWords()
-    keyletter, letterSet = getLetterset(words)
-
-    print("\n Searching for letters in ", len(words), "words... \n")
-    currentWordList = check(words, keyletter, letterSet)
-
     #originalWordList = copy.copy(currentWordList)
 
     ### Create Game object ###
     global game
-    game = myGame(window, hexCanvas, honeyFrame, currentWordList, letterSet, wordFrame, defList)
+    game = myGame(window, hexCanvas, honeyFrame, wordFrame)
     game.checkUser()
     game.window.title("Welcome to Spelling Bee for Kids!")
     game.window.option_add('*tearOff', False)
-    game.window.geometry(str(WIDTH)+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
+    game.window.geometry(str(int(13*WIDTH/16))+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
     center(game.window)
     game.WIDTH = WIDTH
     game.HEIGHT = HEIGHT
-
-    # Add buttons to canvas
-    letterSet = convertToUpper(letterSet)
-    game.makeHexArray(letterSet, 180, 180, 60)
-
-    #print("$$$$$$$$$$$$")
-    #print(game.window.tk.call('tk', 'windowingsystem'))
-    game.ORIGINAL_LETTER_COUNT = game.countChars(currentWordList)
-    
-    #currentWordList = sorted(currentWordList, key=len)
-    print("Found ", len(game.currentWordList), "words: ")
-    print(game.currentWordList)
-
 
     introText = "Welcome back " + game.userInfo.name + "! Get ready for a spelling bee! Make words from the available letters, but all words must use the center letter. If you would like to play as somebody else, enter your name below. "
 
@@ -131,16 +130,18 @@ def init():
     # set focus on the entry box 
     nameBox.focus_set()
 
+    # Change the picture when the user selects a game mode
     def setPicture():
-        if game.userInfo.difficulty == 'Easy':
+        if game.userInfo.difficulty == 'Bee':
             diff = tk.PhotoImage(file ='data/big_bee.gif')
-        elif game.userInfo.difficulty == 'Medium':
+        elif game.userInfo.difficulty == 'Wasp':
             diff = tk.PhotoImage(file ='data/big_wasp.gif')
         else:
             diff = tk.PhotoImage(file ='data/big_hornet.gif')
         game.difficultyPic = diff
         game.difficultyLabel.configure(image = game.difficultyPic)
     
+    # Adjust the button appearances, save selection in the game object, and call setPicture()
     def difficultySelect(event):
         buttonType = event.widget.cget("text")
         game.userInfo.difficulty = buttonType
@@ -153,11 +154,11 @@ def init():
 
     # Initialize and grid buttons in their frame
     buttonFrame = Frame(game.window)
-    easyButton = tk.Label(buttonFrame, text= "Easy",fg='green',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
+    easyButton = tk.Label(buttonFrame, text= 'Bee',fg='green',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
     easyButton.grid(row = 0, column = 0, padx = 15)
-    mediumButton = tk.Label(buttonFrame, text= "Medium",fg='blue',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5, borderwidth = 4 )
+    mediumButton = tk.Label(buttonFrame, text= 'Wasp',fg='blue',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5, borderwidth = 4 )
     mediumButton.grid(row = 0, column = 1, padx = 15)
-    hardButton = tk.Label(buttonFrame, text= "Hard",fg='red',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
+    hardButton = tk.Label(buttonFrame, text= 'Hornet',fg='red',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
     hardButton.grid(row = 0, column = 2, padx = 15)
     for child in buttonFrame.winfo_children():
         if child.cget("text") == game.userInfo.difficulty:
@@ -168,9 +169,9 @@ def init():
     hardButton.bind("<Button-1>", difficultySelect)  
 
     # Grid the difficulty picture (last)
-    if game.userInfo.difficulty == 'Easy':
+    if game.userInfo.difficulty == 'Bee':
         diff = tk.PhotoImage(file ='data/big_bee.gif')
-    elif game.userInfo.difficulty == 'Medium':
+    elif game.userInfo.difficulty == 'Wasp':
         diff = tk.PhotoImage(file ='data/big_wasp.gif')
     else:
         diff = tk.PhotoImage(file ='data/big_hornet.gif')
