@@ -12,8 +12,11 @@ import StoreAndLoad
 
 Golden = '#F3C622'
 Gunmetal = '#23212C'
+ActiveGunmetal = '#C7C5D3'
 YellowOrange = '#FCB43A'
+ActiveYellowOrange = '#FDD99B'
 Onyx = "#3A3637"
+ActiveOnyx = '#B6AFB1'
 Lemon = '#FCD615'
 
 class myGame:
@@ -61,13 +64,40 @@ class myGame:
         else:
             pass
 
+    #######################################################################################
+    #                               Hex Canvas Handlers                                   #
+    #######################################################################################
+
+
+    # This is done in a silly way, but it works for this. Hexagon colors change when mouse hovers over, 
+    # even if it's technically over the text element and not the actual hexagon
+    def _changeColor(self, event, colorPicked):
+        element_id = self.hexCanvas.find_withtag(tk.CURRENT)
+        currentTag = self.hexCanvas.gettags(element_id)
+        if currentTag[0][-1] == 'l':
+            self.hexCanvas.itemconfig(currentTag[0].rstrip('l'), fill=colorPicked)
+        else:
+            self.hexCanvas.itemconfig(tk.CURRENT, fill=colorPicked)
+
+    def handle_enter(self, event):
+        self._changeColor(event, ActiveOnyx)
+
+    def handle_leave(self, event):
+        self._changeColor(event, Onyx)
+
+    def handle_enter_center(self, event):
+        self._changeColor(event, ActiveYellowOrange)
+
+    def handle_leave_center(self, event):
+        self._changeColor(event,YellowOrange)
+
     def makeHexButton(self, letter, offsetx, offsety, sidelength, tagName):
 
         self.hexCanvas.create_polygon(sidelength+offsetx,offsety, (sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, 
                                         (-sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, (-sidelength)+offsetx,offsety,  
                                         (-sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, (sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, 
                                         fill = Onyx, outline = Gunmetal, tags=tagName)
-        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill=Golden,tags=tagName)
+        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill=Golden,tags=tagName + 'l')
 
     def makeHexCenterButton(self, letter, offsetx, offsety, sidelength, tagName):
 
@@ -75,7 +105,7 @@ class myGame:
                                         (-sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, (-sidelength)+offsetx,offsety,  
                                         (-sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, (sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, 
                                         fill = Golden, outline = 'white', tags=tagName)
-        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill=Gunmetal,tags=tagName)
+        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill=Gunmetal,tags=tagName +'l')
 
     def deleteFromEntry(self, entry):
         txt = self.textInput.get()[:-1]
@@ -267,16 +297,34 @@ class myGame:
         self.hexCanvas.tag_bind("playbutton5","<Button-1>",self.clicked5)
         self.hexCanvas.tag_bind("playbutton6","<Button-1>",self.clicked6)
         self.hexCanvas.tag_bind("playbutton7","<Button-1>",self.clicked7)
+        self.hexCanvas.tag_bind("playbutton1l","<Button-1>",self.clicked1)
+        self.hexCanvas.tag_bind("playbutton2l","<Button-1>",self.clicked2)
+        self.hexCanvas.tag_bind("playbutton3l","<Button-1>",self.clicked3)
+        self.hexCanvas.tag_bind("playbutton4l","<Button-1>",self.clicked4)
+        self.hexCanvas.tag_bind("playbutton5l","<Button-1>",self.clicked5)
+        self.hexCanvas.tag_bind("playbutton6l","<Button-1>",self.clicked6)
+        self.hexCanvas.tag_bind("playbutton7l","<Button-1>",self.clicked7)
         self.hexCanvas.tag_bind("shuffle","<Button-1>",self.shuffle)
         self.hexCanvas.tag_bind("delete","<Button-1>",self.deleteFromEntry)
         self.window.bind('<Return>', self.enterWord) 
         self.enterIcon.bind("<Button-1>", self.enterWord) 
 
+        self.hexCanvas.tag_bind('playbutton1', '<Enter>', self.handle_enter_center)
+        self.hexCanvas.tag_bind('playbutton1l', '<Enter>', self.handle_enter_center)
+        self.hexCanvas.tag_bind('playbutton1', '<Leave>', self.handle_leave_center)
+        self.hexCanvas.tag_bind('playbutton1l', '<Leave>', self.handle_leave_center)
+        for i in range(2,8):
+            name = "playbutton"+str(i)
+            self.hexCanvas.tag_bind(name, '<Enter>', self.handle_enter)
+            self.hexCanvas.tag_bind(name +'l', '<Enter>', self.handle_enter)
+            self.hexCanvas.tag_bind(name, '<Leave>', self.handle_leave)
+            self.hexCanvas.tag_bind(name +'l', '<Leave>', self.handle_leave)
+
     def drawWidgets(self):
         self.beeLabel.grid(column = 1, row = 1)
         self.textInput.grid(column = 2, row = 1, padx = (50,0))
         self.enterIcon.grid(column = 3,row = 1, padx = (0, 50))
-        self.scoreLabel.grid(column=4, row= 1)
+        self.scoreLabel.grid(column=4, row= 1, padx = (50,0))
         self.hexCanvas.grid(column = 1, row = 2, columnspan = 2, padx = (50, 0))
         #honeyFrame.grid(column = 3, row = 2)
         self.honeyFrame.grid(column = 1, row = 3, columnspan = 4)#, padx = 30)
