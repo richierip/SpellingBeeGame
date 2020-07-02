@@ -12,7 +12,11 @@ game = None
 HEIGHT = 690
 WIDTH = 980 # 996 for golden ratio size
 myName = "" 
-
+Golden = '#F3C622'
+Gunmetal = '#23212C'
+YellowOrange = '#FCB43A'
+Onyx = "#3A3637"
+Lemon = '#FCD615'
 
 def clearWindow(window):
         list = window.grid_slaves()
@@ -69,7 +73,7 @@ def startGame(event):
     game.enterIcon.image = icon # Need this
 
     # Score label code
-    game.scoreLabel = tk.Label(game.window, text="SCORE: " + str(int(game.SCORE)), fg='Black', bg='yellow',font=(game.FONT_SELECT, '36'))
+    game.scoreLabel = tk.Label(game.window, text="Score: " + str(int(game.SCORE)), fg=Onyx, relief = 'ridge',font=(game.FONT_SELECT, '36'))
 
     # Bee pic code
     game.beePic = tk.PhotoImage(file = 'data/hornet.gif')
@@ -115,7 +119,7 @@ def init():
     game.WIDTH = WIDTH
     game.HEIGHT = HEIGHT
 
-    introText = "Welcome back " + game.userInfo.name + "! Get ready for a spelling bee! Make words from the available letters, but all words must use the center letter. If you would like to play as somebody else, enter your name below. "
+    introText = "Welcome back " + game.userInfo.name + "! Get ready for a Spelling Bee! Make words from the available letters, but all words must use the center letter. If you would like to play as somebody else, enter your name below. "
 
     # add an instructions label 
     instructions = tk.Label(game.window, text = introText, font = ('Helvetica', 20), wraplength = 600, padx = 100, pady = 20) 

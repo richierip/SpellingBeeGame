@@ -10,6 +10,12 @@ from wordGenerator import *
 import StoreAndLoad
 #import interface
 
+Golden = '#F3C622'
+Gunmetal = '#23212C'
+YellowOrange = '#FCB43A'
+Onyx = "#3A3637"
+Lemon = '#FCD615'
+
 class myGame:
     def __init__(self, window, hexCanvas, honeyFrame, wordFrame):
         self.WIDTH = None
@@ -51,7 +57,7 @@ class myGame:
     # If no data yet (first time running the game), this is the default user
     def checkUser(self):
         if self.userInfo == None:
-            self.userInfo = StoreAndLoad.userPresets('Ken', 'Yellow', 'Black', [], [])
+            self.userInfo = StoreAndLoad.userPresets('Ken', YellowOrange, Onyx, [], [])
         else:
             pass
 
@@ -60,16 +66,16 @@ class myGame:
         self.hexCanvas.create_polygon(sidelength+offsetx,offsety, (sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, 
                                         (-sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, (-sidelength)+offsetx,offsety,  
                                         (-sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, (sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, 
-                                        fill = 'gray', outline = 'black', tags=tagName)
-        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill='yellow',tags=tagName)
+                                        fill = Onyx, outline = Gunmetal, tags=tagName)
+        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill=Golden,tags=tagName)
 
     def makeHexCenterButton(self, letter, offsetx, offsety, sidelength, tagName):
 
         self.hexCanvas.create_polygon(sidelength+offsetx,offsety, (sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, 
                                         (-sidelength/2)+offsetx,((math.sqrt(3)*sidelength)/2)+offsety, (-sidelength)+offsetx,offsety,  
                                         (-sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, (sidelength/2)+offsetx,(-(math.sqrt(3)*sidelength)/2)+offsety, 
-                                        fill = 'yellow', outline = 'white', tags=tagName)
-        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill='black',tags=tagName)
+                                        fill = Golden, outline = 'white', tags=tagName)
+        self.hexCanvas.create_text(offsetx, offsety, text=letter, font=(self.FONT_SELECT, 26), fill=Gunmetal,tags=tagName)
 
     def deleteFromEntry(self, entry):
         txt = self.textInput.get()[:-1]
@@ -80,8 +86,8 @@ class myGame:
         self.deleteIcon = icon = tk.PhotoImage(file = 'data/left-arrow.gif') # Have to do this to prevent garbage collection
         myWidth = int(self.hexCanvas.cget("width"))
         circumference = myWidth / 8
-        self.hexCanvas.create_oval(3, 5 , circumference + 3, circumference + 5, fill = 'white', outline = 'black', tags = 'delete')
-        #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill='black',tags='shuffle')
+        self.hexCanvas.create_oval(3, 5 , circumference + 3, circumference + 5, fill = 'white', outline = Gunmetal, tags = 'delete')
+        #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill=Onyx,tags='shuffle')
         self.hexCanvas.create_image((3 + circumference/2, (5 + circumference/2)), image = self.deleteIcon ,tags='delete')
 
     def shuffle(self, event):
@@ -101,8 +107,8 @@ class myGame:
         myWidth = int(self.hexCanvas.cget("width"))
         circumference = myWidth / 8
 
-        self.hexCanvas.create_oval(myWidth - circumference, 5 , myWidth, circumference + 5, fill = 'white', outline = 'black', tags = 'shuffle')
-        #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill='black',tags='shuffle')
+        self.hexCanvas.create_oval(myWidth - circumference, 5 , myWidth, circumference + 5, fill = 'white', outline = Gunmetal, tags = 'shuffle')
+        #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill=Onyx,tags='shuffle')
         self.hexCanvas.create_image((myWidth - (circumference/2), 5 + circumference/2), image = self.shuffleIcon ,tags='shuffle')
 
     def makeHexArray(self, letters, centerX, centerY, sidelength):
@@ -268,13 +274,13 @@ class myGame:
 
     def drawWidgets(self):
         self.beeLabel.grid(column = 1, row = 1)
-        self.textInput.grid(column = 2, row = 1)
-        self.enterIcon.grid(column = 3,row = 1)
+        self.textInput.grid(column = 2, row = 1, padx = (50,0))
+        self.enterIcon.grid(column = 3,row = 1, padx = (0, 50))
         self.scoreLabel.grid(column=4, row= 1)
-        self.hexCanvas.grid(column = 1, row = 2, columnspan = 2)#, padx = 50)
+        self.hexCanvas.grid(column = 1, row = 2, columnspan = 2, padx = (50, 0))
         #honeyFrame.grid(column = 3, row = 2)
         self.honeyFrame.grid(column = 1, row = 3, columnspan = 4)#, padx = 30)
-        self.wordFrame.grid(column = 3, row = 2, columnspan = 3)
+        self.wordFrame.grid(column = 3, row = 2, columnspan = 3, pady = (40,0))
         #testFrame.grid(column = 1, row = 3, columnspan = 3)
 
         #These are drawn INSIDE the honeyFrame, has its own gridding system
@@ -305,16 +311,16 @@ class myGame:
         #self.beeLabel.grid(column = 0, row = 2)
         
         # Display the leaderboard title
-        displayLabel = tk.Label(highScoreFrame, text= "Single-Game Leaderboard", fg='black',font=(self.FONT_SELECT, '20'), width = 20, relief = 'groove')
-        displayLabel.grid(row = 0, column = 0, columnspan = 3)
+        displayLabel = tk.Label(highScoreFrame, text= "Single-Game Leaderboard", fg=Gunmetal, bg = Lemon,font=(self.FONT_SELECT, '20'), width = 20, relief = 'groove')
+        displayLabel.grid(row = 0, column = 0, columnspan = 3, pady = (15,30))
 
         for i in range(self.getProperLength(len(self.userInfo.highScoreTable))): #Picking the top 15 instead of len(self.userInfo.highScoreTable)
             if i % 2 ==0:
-                bgColor = 'black'
-                textColor = 'white'
+                bgColor = Onyx
+                textColor = YellowOrange
             else:
-                bgColor = 'white'
-                textColor = 'black'
+                bgColor = YellowOrange
+                textColor = Onyx
 
             currentObject = self.userInfo.highScoreTable[i]
             if int(self.SCORE) == currentObject[1] and self.userInfo.name == currentObject[0]:
@@ -338,11 +344,11 @@ class myGame:
                     pos = i
                     break
             
-            displayLabel = tk.Label(highScoreFrame, text= str(pos+1) + ".", bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 5, pady = 5)
+            displayLabel = tk.Label(highScoreFrame, text= str(pos+1) + ".", bg = Onyx, fg='red',font=(self.FONT_SELECT, '14'), width = 5, pady = 5)
             displayLabel.grid(column = 0, row = 16)
-            displayLabel = tk.Label(highScoreFrame, text= self.userInfo.name, bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 10, pady = 5)
+            displayLabel = tk.Label(highScoreFrame, text= self.userInfo.name, bg = Onyx, fg='red',font=(self.FONT_SELECT, '14'), width = 10, pady = 5)
             displayLabel.grid(column = 1, row = 16)
-            displayLabel = tk.Label(highScoreFrame, text= str(int(self.SCORE)), bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 20, pady = 5)
+            displayLabel = tk.Label(highScoreFrame, text= str(int(self.SCORE)), bg = Onyx, fg='red',font=(self.FONT_SELECT, '14'), width = 20, pady = 5)
             displayLabel.grid(column = 2, row = 16)
 
         return highScoreFrame
@@ -351,17 +357,17 @@ class myGame:
         allTimeFrame = Frame(parent, width=w, height = h)
 
         # Display the leaderboard title
-        displayLabel = tk.Label(allTimeFrame, text= "All Time Leaderboard",fg='black',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove' )
-        displayLabel.grid(row = 0, column = 0, columnspan = 3)
+        displayLabel = tk.Label(allTimeFrame, text= "All Time Leaderboard",fg=Gunmetal, bg=Lemon,font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove' )
+        displayLabel.grid(row = 0, column = 0, columnspan = 3, pady = (15,30))
 
         # Go through the all time array
         for i in range(self.getProperLength(len(self.userInfo.allTimeTable))): 
             if i % 2 ==0:
-                bgColor = 'black'
-                textColor = 'white'
+                bgColor = Onyx
+                textColor = YellowOrange
             else:
-                bgColor = 'white'
-                textColor = 'black'
+                bgColor = YellowOrange
+                textColor = Onyx
 
             currentObject = self.userInfo.allTimeTable[i]
             if self.userInfo.name == currentObject[0]:
@@ -384,12 +390,12 @@ class myGame:
                 if allTimeScore == self.userInfo.allTimeTable[i][1]:
                     pos = i
                     break
-            displayLabel = tk.Label(allTimeFrame, text= str(pos+1) + "." , bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 5, pady = 5)
+            displayLabel = tk.Label(allTimeFrame, text= str(pos+1) + "." , bg = Onyx, fg='red',font=(self.FONT_SELECT, '14'), width = 5, pady = 5)
             displayLabel.grid(column = 0, row = 16)
 
-            displayLabel = tk.Label(allTimeFrame, text= self.userInfo.name, bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 10, pady = 5)
+            displayLabel = tk.Label(allTimeFrame, text= self.userInfo.name, bg = Onyx, fg='red',font=(self.FONT_SELECT, '14'), width = 10, pady = 5)
             displayLabel.grid(column = 1, row = 16)
-            displayLabel = tk.Label(allTimeFrame, text= str(allTimeScore), bg = 'black', fg='red',font=(self.FONT_SELECT, '14'), width = 20, pady = 5)
+            displayLabel = tk.Label(allTimeFrame, text= str(allTimeScore), bg = Onyx, fg='red',font=(self.FONT_SELECT, '14'), width = 20, pady = 5)
             displayLabel.grid(column = 2, row = 16)
 
         return allTimeFrame
@@ -416,11 +422,11 @@ class myGame:
 
         # Create labels for every word and put them in the appropriate Frame
         for word in self.FOUND:
-            displayLabel = tk.Label(foundFrame.scrollable_frame, text= word, fg='Black',font=(self.FONT_SELECT, '14'), pady = 5) 
+            displayLabel = tk.Label(foundFrame.scrollable_frame, text= word, fg=Onyx,font=(self.FONT_SELECT, '14'), pady = 5) 
             displayLabel.pack()
 
         for word in self.currentWordList:
-            displayLabel = tk.Label(notFoundFrame.scrollable_frame, text= word.title(), fg='Black',font=(self.FONT_SELECT, '14'), pady = 5) 
+            displayLabel = tk.Label(notFoundFrame.scrollable_frame, text= word.title(), fg=Onyx,font=(self.FONT_SELECT, '14'), pady = 5) 
             displayLabel.pack()
 
         # Put the bee there I guess 
@@ -429,9 +435,9 @@ class myGame:
 
         # Make and pack the Toplevel label and Frames
         message = "You found " + str(len(self.FOUND)) + " out of " + str(len(self.FOUND) + len(self.currentWordList)) + " possible words. "
-        topLabel = tk.Label(w, text= message, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)
-        leftLabel = tk.Label(masterFrame, text= 'Found', fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 5) 
-        rightLabel = tk.Label(masterFrame, text= 'Not Found', fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)  
+        topLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)
+        leftLabel = tk.Label(masterFrame, text= 'Found', fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5) 
+        rightLabel = tk.Label(masterFrame, text= 'Not Found', fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)  
         leftLabel.grid(row = 0, column = 0, padx = 10)
         rightLabel.grid(row = 0, column = 1, padx = 10)
         foundFrame.grid(row = 1, column = 0, padx = 10, sticky=tk.N)
@@ -472,9 +478,9 @@ class myGame:
         buttonFrame = Frame(self.window, width=880, height = 100 , pady = 45)
 
         # Initialize and grid buttons in their frame
-        solutionButton = tk.Label(buttonFrame, text= "Show Solution",fg='black',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5 )
+        solutionButton = tk.Label(buttonFrame, text= "Show Solution",fg=Gunmetal, bg='white',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5 )
         solutionButton.grid(row = 0, column = 0, padx = 15)
-        playAgainButton = tk.Label(buttonFrame, text= "Play Again",fg='black',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5  )
+        playAgainButton = tk.Label(buttonFrame, text= "Play Again",fg=Gunmetal, bg='white',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5  )
         playAgainButton.grid(row = 0, column = 1, padx = 15)
 
         # Bindings for buttons
@@ -513,7 +519,7 @@ class myGame:
 
         # If no definition is found, say so
         if defArray == []:
-            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg='Black',font=(self.FONT_SELECT, '14'))
+            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg=Onyx,font=(self.FONT_SELECT, '14'))
             displayLabel.pack()
 
         else:
@@ -522,10 +528,10 @@ class myGame:
             else:
                 message = "I found " + str(len(defArray)) + " definitions for " + word + " : "
 
-            displayLabel = tk.Label(w, text= message, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+            displayLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
             displayLabel.pack()
             for l in defArray:
-                displayLabel = tk.Label(w, text= l, fg='Black',font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
+                displayLabel = tk.Label(w, text= l, fg=Onyx,font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
                 displayLabel.pack()
 
         '''
@@ -556,7 +562,7 @@ class myGame:
         #Regrid everything with new bindings   #TODO dynamically size the text?
         num = math.ceil(math.sqrt(len(self.FOUND)))
         for i in range(len(self.FOUND)):
-            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg='Black',font=(self.FONT_SELECT, '20'), padx = 4, pady = 3)
+            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx,font=(self.FONT_SELECT, '20'), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
             #print("current lable column: ", int(i%num), ", row: ", int(i/num))
             self.customLabel.grid(row = int(i%num), column = int(i/num))
@@ -599,7 +605,7 @@ class myGame:
 
         message = "Please enter a word you would like to add : "
         self.trackResult.set(message)
-        displayLabel = tk.Label(w, textvariable= self.trackResult, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+        displayLabel = tk.Label(w, textvariable= self.trackResult, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
         displayLabel.pack()
         
         popupTextInput = tk.Entry(w,width=10,font=(self.FONT_SELECT, '36'))
@@ -638,7 +644,7 @@ class myGame:
 
         message = "Please enter a word you would like to remove : "
         self.trackResult.set(message)
-        displayLabel = tk.Label(w, textvariable= self.trackResult, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+        displayLabel = tk.Label(w, textvariable= self.trackResult, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
         displayLabel.pack()
         
         popupTextInput = tk.Entry(w,width=10,font=(self.FONT_SELECT, '36'))
@@ -680,7 +686,7 @@ class myGame:
 
         # if no definition, print an anagram? For now, do nothing
         if defArray == []:
-            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg='Black',font=(self.FONT_SELECT, '14'))
+            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg=Onyx,font=(self.FONT_SELECT, '14'))
             displayLabel.pack()
 
         else:
@@ -693,11 +699,11 @@ class myGame:
             else:
                 message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for these definition of a word you haven't found yet : "
 
-            displayLabel = tk.Label(w, text= message, fg='Black',font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+            displayLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
             displayLabel.pack()
 
             for line in approvedDefinitions: # Each line is a definition, already parsed and proofread
-                displayLabel = tk.Label(w, text= line, fg='Black',font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
+                displayLabel = tk.Label(w, text= line, fg=Onyx,font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
                 displayLabel.pack()
             # Finally, update the score display and honey jars
             self.updateScore()
