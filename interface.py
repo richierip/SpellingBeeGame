@@ -82,12 +82,10 @@ def startGame(event):
     # Honey pics starter code
     game.honeyPic = tk.PhotoImage(file = 'data/honey0_8.gif')
     game.honey1Label = tk.Label(game.honeyFrame, image = game.honeyPic)
-    honey2 = tk.PhotoImage(file = 'data/blank.gif')
-    game.honey2Label = tk.Label(game.honeyFrame, image = honey2)
-    honey3 = tk.PhotoImage(file = 'data/blank.gif')
-    game.honey3Label = tk.Label(game.honeyFrame, image = honey3)
-    honey4 = tk.PhotoImage(file = 'data/blank.gif')
-    game.honey4Label = tk.Label(game.honeyFrame, image = honey4)
+    game.honey2Label = tk.Label(game.honeyFrame, image = game.blank)
+    game.honey2Label.configure(image = game.blank) # Avoid garbage collection
+    game.honey3Label = tk.Label(game.honeyFrame, image = game.blank)
+    game.honey4Label = tk.Label(game.honeyFrame, image = game.blank)
 
 
     # Set the button bindings to individual functions

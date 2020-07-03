@@ -54,6 +54,7 @@ class myGame:
         self.enterIcon = None
         self.deleteIcon = None
         self.customLabel = None
+        self.blank = None
 
         # Pickle user values. put in new class in a bit
         self.userInfo = StoreAndLoad.loadObject('data/userInfo')
@@ -222,7 +223,25 @@ class myGame:
         print("SCORE is : ", self.SCORE)
         self.updateHoney(self.SCORE)
 
+    def clearHoneyFrame(self):
+        print("$$$$$$$$$$")
+        #self.blank = tk.PhotoImage(file = 'data/bee2.gif')
+        if self.SCORE <750:
+            self.honey4Label.configure(image = self.blank)
+            self.honey4Label.image = self.blank
+            self.honey4Label.grid(column=4,row=1)
+        if self.SCORE <500:
+            self.honey3Label.configure(image = self.blank)
+            self.honey3Label.image = self.blank
+            self.honey3Label.grid(column=3,row=1)
+        if self.SCORE <250:
+            self.honey2Label.configure(image = self.blank)
+            self.honey2Label.image = self.blank
+            self.honey2Label.grid(column=2,row=1)
+
+
     def updateHoney(self, score):
+        self.clearHoneyFrame()
         maxScore = 1000 # subject to change so coding relative to this #TODO
         if score <= maxScore/4: # Only draw one jar
             conversion = 8 * (score / (maxScore/4))
@@ -569,9 +588,9 @@ class myGame:
         StoreAndLoad.storeObject(self.userInfo, 'data/userInfo')
 
 
-    #######################################
-    #          Definition Handlers        #
-    #######################################
+    #######################################################################################
+    #                                Definition Handlers                                  #
+    #######################################################################################
 
     #TODO something with style consistency in here
 
@@ -750,6 +769,8 @@ class myGame:
             # Trim each definition : remove index words, or whole entry if the word is used in the entry (too easy to solve then)
             approvedDefinitions = []
             for line in defArray:
+                    if type(line) == type([]):
+                        continue
                     line = line.replace(choice, '')
                     if choice.lower() not in line:
                         approvedDefinitions.append(line)
@@ -767,7 +788,7 @@ class myGame:
             self.hintPenalty += self.SCORE/15 #TODO decide appropriate penalty
 
             # Make and pack the labels
-            if len(defArray) == 1:
+            if len(approvedDefinitions) == 1:
                 message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for a definition of a word you haven't found yet : "
             else:
                 message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for these definitions of a word you haven't found yet : "
