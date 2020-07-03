@@ -644,6 +644,13 @@ class myGame:
         for l in list:
             l.destroy()
 
+    def makeActiveColor(self, event):
+        event.widget.configure(bg = YellowOrange)
+
+    def resetColor(self, event):
+        print("Resetting")
+        event.widget.configure(bg = self.wordFrame.cget("bg"))
+
     def updateWordFrame(self):
         # Sort found words list show they show up alphabetically
         self.FOUND.sort()
@@ -654,8 +661,10 @@ class myGame:
         num = math.ceil(math.sqrt(len(self.FOUND)))
         fontSize = str(int(10/num + 18 ))
         for i in range(len(self.FOUND)):
-            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx,font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
+            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx, font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
+            self.customLabel.bind("<Enter>", self.makeActiveColor)
+            self.customLabel.bind("<Leave>", self.resetColor)
             #print("current lable column: ", int(i%num), ", row: ", int(i/num))
             self.customLabel.grid(row = int(i%num), column = int(i/num))
 
