@@ -46,6 +46,7 @@ def startGame(event):
 
     print("\n Searching for letters in ", len(words), "words... \n")
     game.currentWordList = check(words, keyletter, game.letterSet)
+    game.validHints = copy.copy(game.currentWordList)
 
     # Add buttons to canvas
     letterSet = convertToUpper(game.letterSet)

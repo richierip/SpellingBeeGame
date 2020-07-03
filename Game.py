@@ -33,6 +33,7 @@ class myGame:
         self.ORIGINAL_LETTER_COUNT = 0
         self.FOUND = []
         self.defList = []
+        self.validHints = []
 
         self.window = window
         self.hexCanvas = hexCanvas
@@ -315,6 +316,10 @@ class myGame:
 
             # Take the word out of list and put it in FOUND
             self.currentWordList.remove(guess)
+            try:
+                self.validHints.remove(guess)
+            except:
+                None # We don't care if it's already been removed
             self.FOUND.append(guess.title())
             print(self.currentWordList)
             self.updateWordFrame()
@@ -636,11 +641,6 @@ class myGame:
                 displayLabel = tk.Label(w, text= l, fg=Onyx,font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
                 displayLabel.pack()
 
-        '''
-        popupTextInput = tk.Entry(w,width=10,font=(self.FONT_SELECT, '36'))
-        popupTextInput.focus() 
-        popupTextInput.pack()
-        '''
 
     def wordLabelClicked(self, event):
         print(event.widget)
@@ -771,9 +771,10 @@ class myGame:
         beeLabel2.pack()
 
         # Choose a random word
-        candidates = copy.copy(self.currentWordList)
+        candidates = copy.copy(self.validHints)
 
         # Find a word that has an acceptable definition to give as a hint, if there is one
+        choice = ""
         for i in range(len(candidates)):
             choice = random.choice(candidates)
             candidates.remove(choice)
@@ -798,13 +799,16 @@ class myGame:
                 break
 
         # if no definition, print an anagram? For now, do nothing
-        if defArray == []:
-            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg=Onyx,font=(self.FONT_SELECT, '14'))
+        if approvedDefinitions == []:
+            displayLabel = tk.Label(w, text= "Sorry, I can't give any more hints", fg=Onyx,font=(self.FONT_SELECT, '14'))
             displayLabel.pack()
 
+        # Found a valid word to display definitions for
         else:
             # Dock some points
             self.hintPenalty += self.SCORE/15 #TODO decide appropriate penalty
+            # Remove the word from pool of possible future hints
+            self.validHints.remove(choice.lower())
 
             # Make and pack the labels
             if len(approvedDefinitions) == 1:
