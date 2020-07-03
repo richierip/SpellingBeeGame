@@ -11,6 +11,7 @@ import StoreAndLoad
 #import interface
 
 Golden = '#F3C622'
+ActiveGolden = '#FAE69E'
 Gunmetal = '#23212C'
 ActiveGunmetal = '#C7C5D3'
 YellowOrange = '#FCB43A'
@@ -86,10 +87,22 @@ class myGame:
         self._changeColor(event, Onyx)
 
     def handle_enter_center(self, event):
-        self._changeColor(event, ActiveYellowOrange)
+        self._changeColor(event, ActiveGolden)
 
     def handle_leave_center(self, event):
-        self._changeColor(event,YellowOrange)
+        self._changeColor(event,Golden)
+    
+    def handle_enter_shuffle(self, event):
+        self._changeColor(event,Golden)
+
+    def handle_leave_shuffle(self, event):
+        self._changeColor(event,'white')
+
+    def handle_enter_delete(self, event):
+        self._changeColor(event,Golden)
+
+    def handle_leave_delete(self, event):
+        self._changeColor(event,'white')
 
     def makeHexButton(self, letter, offsetx, offsety, sidelength, tagName):
 
@@ -116,9 +129,9 @@ class myGame:
         self.deleteIcon = icon = tk.PhotoImage(file = 'data/left-arrow.gif') # Have to do this to prevent garbage collection
         myWidth = int(self.hexCanvas.cget("width"))
         circumference = myWidth / 8
-        self.hexCanvas.create_oval(3, 5 , circumference + 3, circumference + 5, fill = 'white', outline = Gunmetal, tags = 'delete')
+        self.hexCanvas.create_oval(circumference + 3, 5 , circumference*2 + 3, circumference + 5, fill = 'white', outline = Gunmetal, tags = 'delete')
         #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill=Onyx,tags='shuffle')
-        self.hexCanvas.create_image((3 + circumference/2, (5 + circumference/2)), image = self.deleteIcon ,tags='delete')
+        self.hexCanvas.create_image((3 + 3*circumference/2, (5 + circumference/2)), image = self.deleteIcon ,tags='deletel')
 
     def shuffle(self, event):
         for item in self.hexCanvas.find_all(): 
@@ -137,9 +150,9 @@ class myGame:
         myWidth = int(self.hexCanvas.cget("width"))
         circumference = myWidth / 8
 
-        self.hexCanvas.create_oval(myWidth - circumference, 5 , myWidth, circumference + 5, fill = 'white', outline = Gunmetal, tags = 'shuffle')
+        self.hexCanvas.create_oval(myWidth - circumference*2, 5 , myWidth-circumference, circumference + 5, fill = 'white', outline = Gunmetal, tags = 'shuffle')
         #self.hexCanvas.create_text(myWidth - (circumference/2), 5 + circumference/2, text='S', font=(self.FONT_SELECT, 17), fill=Onyx,tags='shuffle')
-        self.hexCanvas.create_image((myWidth - (circumference/2), 5 + circumference/2), image = self.shuffleIcon ,tags='shuffle')
+        self.hexCanvas.create_image((myWidth - (3*circumference/2), 5 + circumference/2), image = self.shuffleIcon ,tags='shufflel')
 
     def makeHexArray(self, letters, centerX, centerY, sidelength):
         self.makeDeleteCircle()
@@ -306,8 +319,19 @@ class myGame:
         self.hexCanvas.tag_bind("playbutton7l","<Button-1>",self.clicked7)
         self.hexCanvas.tag_bind("shuffle","<Button-1>",self.shuffle)
         self.hexCanvas.tag_bind("delete","<Button-1>",self.deleteFromEntry)
+        self.hexCanvas.tag_bind("shufflel","<Button-1>",self.shuffle)
+        self.hexCanvas.tag_bind("deletel","<Button-1>",self.deleteFromEntry)
         self.window.bind('<Return>', self.enterWord) 
         self.enterIcon.bind("<Button-1>", self.enterWord) 
+
+        self.hexCanvas.tag_bind('shuffle', '<Enter>', self.handle_enter_shuffle)
+        self.hexCanvas.tag_bind('shufflel', '<Enter>', self.handle_enter_shuffle)
+        self.hexCanvas.tag_bind('shuffle', '<Leave>', self.handle_leave_shuffle)
+        self.hexCanvas.tag_bind('shufflel', '<Leave>', self.handle_leave_shuffle)
+        self.hexCanvas.tag_bind('delete', '<Enter>', self.handle_enter_delete)
+        self.hexCanvas.tag_bind('deletel', '<Enter>', self.handle_enter_delete)
+        self.hexCanvas.tag_bind('delete', '<Leave>', self.handle_leave_delete)
+        self.hexCanvas.tag_bind('deletel', '<Leave>', self.handle_leave_delete)
 
         self.hexCanvas.tag_bind('playbutton1', '<Enter>', self.handle_enter_center)
         self.hexCanvas.tag_bind('playbutton1l', '<Enter>', self.handle_enter_center)
@@ -324,7 +348,7 @@ class myGame:
         self.beeLabel.grid(column = 1, row = 1)
         self.textInput.grid(column = 2, row = 1, padx = (50,0))
         self.enterIcon.grid(column = 3,row = 1, padx = (0, 50))
-        self.scoreLabel.grid(column=4, row= 1, padx = (50,0))
+        self.scoreLabel.grid(column=4, row= 1, padx = (130,0))
         self.hexCanvas.grid(column = 1, row = 2, columnspan = 2, padx = (50, 0))
         #honeyFrame.grid(column = 3, row = 2)
         self.honeyFrame.grid(column = 1, row = 3, columnspan = 4)#, padx = 30)
@@ -337,9 +361,9 @@ class myGame:
         self.honey3Label.grid(column=3,row=1)
         self.honey4Label.grid(column=4,row=1)
 
-    #######################################
-    #               End Game              #
-    #######################################
+    #######################################################################################
+    #                                     End Game                                        #
+    #######################################################################################
 
 
     def clearWindow(self):
@@ -746,7 +770,7 @@ class myGame:
             if len(defArray) == 1:
                 message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for a definition of a word you haven't found yet : "
             else:
-                message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for these definition of a word you haven't found yet : "
+                message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for these definitions of a word you haven't found yet : "
 
             displayLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
             displayLabel.pack()
