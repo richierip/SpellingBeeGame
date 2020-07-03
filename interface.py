@@ -81,6 +81,7 @@ def startGame(event):
 
     # Honey pics starter code
     game.honeyPic = tk.PhotoImage(file = 'data/honey0_8.gif')
+    game.blank = tk.PhotoImage(file = 'data/blank.gif')
     game.honey1Label = tk.Label(game.honeyFrame, image = game.honeyPic)
     game.honey2Label = tk.Label(game.honeyFrame, image = game.blank)
     game.honey2Label.configure(image = game.blank) # Avoid garbage collection
@@ -100,9 +101,12 @@ def init():
 
     # Generic tkinter setup
     window = tk.Tk()
+    #window.configure(bg='gray')
     hexCanvas = Canvas(window, width=360, height=360)#, bg = 'green')
     honeyFrame = Frame(window, width=800, height=200)#, bg = 'blue') #TODO something with colors needs to change 
     wordFrame = Frame(window, width=500, height=360)#, bg = 'red')
+    spacingFix = tk.Label(wordFrame, text="" )
+    spacingFix.grid()
 
     #originalWordList = copy.copy(currentWordList)
 

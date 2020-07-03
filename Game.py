@@ -294,6 +294,17 @@ class myGame:
             self.honey3Label.image = newPic
             self.honey3Label.grid(column=3,row=1)
 
+    def resetInputColor(self):
+        self.textInput.configure(bg = 'white')
+
+    def flashCorrect(self):
+        self.textInput.configure(bg = 'green')
+        self.window.after(150, self.resetInputColor)
+
+    def flashIncorrect(self):
+        self.textInput.configure(bg = 'red')
+        self.window.after(150, self.resetInputColor)
+
     def enterWord(self, event):
         guess = self.textInput.get().lower()
         if guess in self.currentWordList:
@@ -306,15 +317,15 @@ class myGame:
             self.currentWordList.remove(guess)
             self.FOUND.append(guess.title())
             print(self.currentWordList)
-
             self.updateWordFrame()
-            
-            #TODO UPDATE SCORE
             self.updateScore()
+            self.flashCorrect()
         else:
             print("DARN!") 
+            self.flashIncorrect()
         self.textInput.selection_clear()
         self.textInput.delete(0,tk.END)
+            
 
         if self.currentWordList == []:
             if self.SCORE < 1000:
@@ -648,7 +659,6 @@ class myGame:
         event.widget.configure(bg = YellowOrange)
 
     def resetColor(self, event):
-        print("Resetting")
         event.widget.configure(bg = self.wordFrame.cget("bg"))
 
     def updateWordFrame(self):
