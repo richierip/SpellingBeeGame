@@ -9,6 +9,7 @@ from wordGenerator import getLetterset, getWords, check, convertToUpper
 from Game import myGame
 
 game = None 
+nameBox = None
 HEIGHT = 690
 WIDTH = 980 # 996 for golden ratio size
 myName = "" 
@@ -17,6 +18,9 @@ Gunmetal = '#23212C'
 YellowOrange = '#FCB43A'
 Onyx = "#3A3637"
 Lemon = '#FCD615'
+LeafGreen = '#33CC33'
+SkyBlue = '#0099FF'
+DullRed = '#CC0000'
 
 def clearWindow(window):
         list = window.grid_slaves()
@@ -60,8 +64,9 @@ def startGame(event):
     print(game.currentWordList)
 
     #  Replace name in Persistent Storage
-    if event.widget.get() != "":
-        game.userInfo.name = event.widget.get().title()
+    global nameBox
+    if nameBox.get() != "":
+        game.userInfo.name = nameBox.get().title()
     game.window.title("Good luck "+ game.userInfo.name +"!")
 
     clearWindow(game.window)
@@ -74,10 +79,15 @@ def startGame(event):
     game.enterIcon.image = icon # Need this
 
     # Score label code
-    game.scoreLabel = tk.Label(game.window, text="Score: " + str(int(game.SCORE)), fg=Onyx, relief = 'ridge',font=(game.FONT_SELECT, '36'))
+    game.scoreLabel = tk.Label(game.window, text="Score: " + str(int(game.SCORE)), fg=Onyx, bg = Lemon, relief = 'ridge',font=(game.FONT_SELECT, '36'))
 
     # Bee pic code
-    game.beePic = tk.PhotoImage(file = 'data/hornet.gif')
+    if game.userInfo.difficulty == 'Bee':
+        game.beePic = tk.PhotoImage(file = 'data/bee2.gif')
+    elif game.userInfo.difficulty == 'Wasp':
+        game.beePic = tk.PhotoImage(file = 'data/wasp.gif')
+    elif game.userInfo.difficulty == 'Hornet':
+        game.beePic = tk.PhotoImage(file = 'data/hornet.gif')
     game.beeLabel = tk.Label(game.window, image = game.beePic, padx = 5)
 
     # Honey pics starter code
@@ -128,14 +138,18 @@ def init():
     instructions = tk.Label(game.window, text = introText, font = ('Helvetica', 20), wraplength = 600, padx = 100, pady = 20) 
     instructions.grid() 
     
-    # add a text entry box for entering name
-    nameBox = tk.Entry(game.window,width=10,justify = tk.CENTER,font=(game.FONT_SELECT, '36')) 
- 
+    # add a text entry box for entering name and a button next to it
+    entryFrame = Frame(game.window)
+    global nameBox
+    nameBox = tk.Entry(entryFrame,width=10,justify = tk.CENTER,font=(game.FONT_SELECT, '36')) 
+    startButton = tk.Label(entryFrame, text= "Start",fg=Gunmetal, bg='white',font=(game.FONT_SELECT, '34') ,relief = 'groove', width = 4, borderwidth = 4 )
+    nameBox.grid(row = 0, column = 0)
+    startButton.grid(row = 0, column = 1, padx = 15) 
     # run the 'startGame' function when the enter key is pressed 
     game.window.bind('<Return>', startGame) 
-    nameBox.grid() 
-    # set focus on the entry box 
-    nameBox.focus_set()
+    startButton.bind("<Button-1>", startGame) 
+    nameBox.focus_set() # set focus on the entry box
+    entryFrame.grid() 
 
     # Change the picture when the user selects a game mode
     def setPicture():
@@ -161,11 +175,11 @@ def init():
 
     # Initialize and grid buttons in their frame
     buttonFrame = Frame(game.window)
-    easyButton = tk.Label(buttonFrame, text= 'Bee',fg='green',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
+    easyButton = tk.Label(buttonFrame, text= 'Bee',bg=LeafGreen, fg = Gunmetal,font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
     easyButton.grid(row = 0, column = 0, padx = 15)
-    mediumButton = tk.Label(buttonFrame, text= 'Wasp',fg='blue',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5, borderwidth = 4 )
+    mediumButton = tk.Label(buttonFrame, text= 'Wasp',bg=SkyBlue, fg = Gunmetal,font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5, borderwidth = 4 )
     mediumButton.grid(row = 0, column = 1, padx = 15)
-    hardButton = tk.Label(buttonFrame, text= 'Hornet',fg='red',font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
+    hardButton = tk.Label(buttonFrame, text= 'Hornet',bg=DullRed, fg = Gunmetal,font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
     hardButton.grid(row = 0, column = 2, padx = 15)
     for child in buttonFrame.winfo_children():
         if child.cget("text") == game.userInfo.difficulty:

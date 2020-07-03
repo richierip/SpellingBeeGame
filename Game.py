@@ -224,7 +224,7 @@ class myGame:
         scalar = 1000 / self.ORIGINAL_LETTER_COUNT # Max score considered 1000 here
         self.SCORE = (totalFound * scalar) - self.hintPenalty
 
-        self.scoreLabel.configure(text="SCORE: " + str(int(self.SCORE)))
+        self.scoreLabel.configure(text="Score: " + str(int(self.SCORE)))
         print("SCORE is : ", self.SCORE)
         self.updateHoney(self.SCORE)
 
