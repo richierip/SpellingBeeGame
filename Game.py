@@ -214,6 +214,10 @@ class myGame:
             count += len(elem)
         return count
 
+    #######################################################################################
+    #                          Score, Honeyjar, Text entry methods                        #
+    #######################################################################################
+
     # Maps score out of 1000 possible. Maybe do something else?
     def updateScore(self):
         totalFound = self.ORIGINAL_LETTER_COUNT - self.countChars(self.currentWordList)
@@ -306,6 +310,13 @@ class myGame:
         self.textInput.configure(bg = 'red')
         self.window.after(150, self.resetInputColor)
 
+    def leftEnter(self, event):
+        self.enterIcon.configure(bg=self.window.cget("bg"))
+
+    def onEnter(self, event):
+        self.enterIcon.configure(bg=Golden)
+
+
     def enterWord(self, event):
         guess = self.textInput.get().lower()
         if guess in self.currentWordList:
@@ -337,6 +348,10 @@ class myGame:
                 self.SCORE = 1000
             self.endGame()
 
+    #######################################################################################
+    #                               Bindings and Grid layout                              #
+    #######################################################################################
+
     def makeBindings(self):
         self.hexCanvas.tag_bind("playbutton1","<Button-1>",self.clicked1)
         self.hexCanvas.tag_bind("playbutton2","<Button-1>",self.clicked2)
@@ -357,7 +372,9 @@ class myGame:
         self.hexCanvas.tag_bind("shufflel","<Button-1>",self.shuffle)
         self.hexCanvas.tag_bind("deletel","<Button-1>",self.deleteFromEntry)
         self.window.bind('<Return>', self.enterWord) 
-        self.enterIcon.bind("<Button-1>", self.enterWord) 
+        self.enterIcon.bind("<Button-1>", self.enterWord)
+        self.enterIcon.bind("<Enter>", self.onEnter) 
+        self.enterIcon.bind("<Leave>", self.leftEnter)  
 
         self.hexCanvas.tag_bind('shuffle', '<Enter>', self.handle_enter_shuffle)
         self.hexCanvas.tag_bind('shufflel', '<Enter>', self.handle_enter_shuffle)
@@ -424,9 +441,9 @@ class myGame:
         for i in range(self.getProperLength(len(self.userInfo.highScoreTable))): #Picking the top 15 instead of len(self.userInfo.highScoreTable)
             if i % 2 ==0:
                 bgColor = Onyx
-                textColor = YellowOrange
+                textColor = Golden
             else:
-                bgColor = YellowOrange
+                bgColor = Golden
                 textColor = Onyx
 
             currentObject = self.userInfo.highScoreTable[i]
@@ -471,9 +488,9 @@ class myGame:
         for i in range(self.getProperLength(len(self.userInfo.allTimeTable))): 
             if i % 2 ==0:
                 bgColor = Onyx
-                textColor = YellowOrange
+                textColor = Golden
             else:
-                bgColor = YellowOrange
+                bgColor = Golden
                 textColor = Onyx
 
             currentObject = self.userInfo.allTimeTable[i]
@@ -613,7 +630,7 @@ class myGame:
     def displayDefinition(self, word):
         result = lookup(self.defList, word)
         defArray = result[0]
-        word = result[1]
+        word = result[1].title()
 
         print("Definition : ", defArray)
         w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
@@ -795,7 +812,12 @@ class myGame:
                     if choice.lower() not in line:
                         approvedDefinitions.append(line)
             
-            if approvedDefinitions != []:
+            if approvedDefinitions == []: # Don't want to check the same word in a future hint
+                try:
+                    self.validHints.remove(choice.lower())
+                except:
+                    None # Don't care about this error
+            else:
                 break
 
         # if no definition, print an anagram? For now, do nothing

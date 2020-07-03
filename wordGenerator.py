@@ -100,7 +100,6 @@ def trimLine(line):
     return line.replace('\n','').lstrip().replace('  ',' ').replace('  ',' ')
 
 def lookup(fullDict, word):
-    # Remove a trailing 's' from the word since only the root is in the dicionary
     word = word.lower()
 
     found = []
@@ -133,9 +132,10 @@ def lookup(fullDict, word):
             break
     
     if found == []:
+        # Try removing a trailing 's' from the word and see if you get a hit
         if word[-1] == 's':
             word = word[:-1]
-            found = lookup(fullDict, word)
+            found = lookup(fullDict, word)[0] # only the definition to avoid nesting
     return [found,word]
 
 def check(words, keyletter, otherletters):
