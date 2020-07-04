@@ -28,7 +28,7 @@ Lemon = '#FCD615'
 LeafGreen = '#33CC33'
 SkyBlue = '#0099FF'
 DullRed = '#CC0000'
-Gray = '#E6E6E6'
+Gray = '#F2F2F2'
 
 def clearWindow(window):
         list = window.grid_slaves()
@@ -124,7 +124,7 @@ def init():
     hexCanvas = Canvas(window, width=360, height=360,bg=Gray, bd = 0, highlightthickness=0,)
     honeyFrame = Frame(window, width=800, height=200,bg=Gray)
     wordFrame = Frame(window, width=500, height=360,bg=Gray)
-    spacingFix = tk.Label(wordFrame, text="" )
+    spacingFix = tk.Label(wordFrame, text="" , bg = Gray)
     spacingFix.grid()
 
     #originalWordList = copy.copy(currentWordList)

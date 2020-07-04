@@ -26,7 +26,7 @@ Onyx = "#3A3637"
 ActiveOnyx = '#B6AFB1'
 Lemon = '#FCD615'
 LeafGreen = '#33CC33'
-Gray = '#E6E6E6'
+Gray = '#F2F2F2'
 
 class myGame:
     def __init__(self, window, hexCanvas, honeyFrame, wordFrame):
