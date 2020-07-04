@@ -28,6 +28,7 @@ Lemon = '#FCD615'
 LeafGreen = '#33CC33'
 SkyBlue = '#0099FF'
 DullRed = '#CC0000'
+Gray = '#E6E6E6'
 
 def clearWindow(window):
         list = window.grid_slaves()
@@ -95,16 +96,16 @@ def startGame(event):
         game.beePic = tk.PhotoImage(file = 'data/wasp.gif')
     elif game.userInfo.difficulty == 'Hornet':
         game.beePic = tk.PhotoImage(file = 'data/hornet.gif')
-    game.beeLabel = tk.Label(game.window, image = game.beePic, padx = 5)
+    game.beeLabel = tk.Label(game.window, image = game.beePic, padx = 5, bg = Gray)
 
     # Honey pics starter code
     game.honeyPic = tk.PhotoImage(file = 'data/honey0_8.gif')
     game.blank = tk.PhotoImage(file = 'data/blank.gif')
-    game.honey1Label = tk.Label(game.honeyFrame, image = game.honeyPic)
-    game.honey2Label = tk.Label(game.honeyFrame, image = game.blank)
+    game.honey1Label = tk.Label(game.honeyFrame, image = game.honeyPic, bg = Gray)
+    game.honey2Label = tk.Label(game.honeyFrame, image = game.blank, bg = Gray)
     game.honey2Label.configure(image = game.blank) # Avoid garbage collection
-    game.honey3Label = tk.Label(game.honeyFrame, image = game.blank)
-    game.honey4Label = tk.Label(game.honeyFrame, image = game.blank)
+    game.honey3Label = tk.Label(game.honeyFrame, image = game.blank, bg = Gray)
+    game.honey4Label = tk.Label(game.honeyFrame, image = game.blank, bg = Gray)
 
 
     # Set the button bindings to individual functions
@@ -119,10 +120,10 @@ def init():
 
     # Generic tkinter setup
     window = tk.Tk()
-    #window.configure(bg='gray')
-    hexCanvas = Canvas(window, width=360, height=360)#, bg = 'green')
-    honeyFrame = Frame(window, width=800, height=200)#, bg = 'blue') #TODO something with colors needs to change 
-    wordFrame = Frame(window, width=500, height=360)#, bg = 'red')
+    window.configure(bg=Gray)
+    hexCanvas = Canvas(window, width=360, height=360,bg=Gray, bd = 0, highlightthickness=0,)
+    honeyFrame = Frame(window, width=800, height=200,bg=Gray)
+    wordFrame = Frame(window, width=500, height=360,bg=Gray)
     spacingFix = tk.Label(wordFrame, text="" )
     spacingFix.grid()
 
@@ -142,7 +143,7 @@ def init():
     introText = "Welcome back " + game.userInfo.name + "! Get ready for a Spelling Bee! Make words from the available letters, but all words must use the center letter and be at least 3 characters long. If you would like to play as somebody else, enter your name below, and choose a difficulty setting. "
 
     # add an instructions label 
-    instructions = tk.Label(game.window, text = introText, font = ('Helvetica', 20), wraplength = 600, padx = 100, pady = 20) 
+    instructions = tk.Label(game.window, text = introText, bg=Gray, font = ('Helvetica', 20), wraplength = 600, padx = 100, pady = 20) 
     instructions.grid() 
     
     # add a text entry box for entering name and a button next to it
@@ -152,7 +153,7 @@ def init():
     def leaveStart(event):
         event.widget.configure(bg = 'white')
 
-    entryFrame = Frame(game.window)
+    entryFrame = Frame(game.window,bg=Gray)
     global nameBox
     nameBox = tk.Entry(entryFrame,width=10,justify = tk.CENTER,font=(game.FONT_SELECT, '36')) 
     startButton = tk.Label(entryFrame, text= "Start",fg=Gunmetal, bg='white',font=(game.FONT_SELECT, '34') ,relief = 'groove', width = 4, borderwidth = 4 )
@@ -189,7 +190,7 @@ def init():
         setPicture()
 
     # Initialize and grid buttons in their frame
-    buttonFrame = Frame(game.window)
+    buttonFrame = Frame(game.window, bg=Gray)
     easyButton = tk.Label(buttonFrame, text= 'Bee',bg=LeafGreen, fg = Gunmetal,font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5 , borderwidth = 4 )
     easyButton.grid(row = 0, column = 0, padx = 15)
     mediumButton = tk.Label(buttonFrame, text= 'Wasp',bg=SkyBlue, fg = Gunmetal,font=(game.FONT_SELECT, '20') ,relief = 'raised', padx = 5, borderwidth = 4 )
@@ -212,7 +213,7 @@ def init():
     else:
         diff = tk.PhotoImage(file ='data/big_hornet.gif')
     game.difficultyPic = diff
-    game.difficultyLabel = tk.Label(game.window, image = game.difficultyPic)
+    game.difficultyLabel = tk.Label(game.window, image = game.difficultyPic, bg=Gray)
     game.difficultyLabel.grid()
 
 

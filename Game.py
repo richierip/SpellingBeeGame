@@ -26,6 +26,7 @@ Onyx = "#3A3637"
 ActiveOnyx = '#B6AFB1'
 Lemon = '#FCD615'
 LeafGreen = '#33CC33'
+Gray = '#E6E6E6'
 
 class myGame:
     def __init__(self, window, hexCanvas, honeyFrame, wordFrame):
@@ -429,7 +430,7 @@ class myGame:
             return 15
 
     def createHSFrame(self, parent, w, h):
-        highScoreFrame = Frame(parent, width=w, height = h)
+        highScoreFrame = Frame(parent, width=w, height = h, bg = Gray)
         #self.beeLabel.grid(column = 0, row = 2)
         
         # Display the leaderboard title
@@ -477,7 +478,7 @@ class myGame:
         return highScoreFrame
 
     def createATFrame(self, parent, w, h, allTimeScore):
-        allTimeFrame = Frame(parent, width=w, height = h)
+        allTimeFrame = Frame(parent, width=w, height = h, bg = Gray)
 
         # Display the leaderboard title
         displayLabel = tk.Label(allTimeFrame, text= "All Time Leaderboard",fg=Gunmetal, bg=Lemon,font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove' )
@@ -544,11 +545,11 @@ class myGame:
     def showSolution(self, event):
         import scrollableFrame
         # Create new window and necesary Frames and scrollbar
-        w = tk.Toplevel(width = self.WIDTH/2, height = 2*self.HEIGHT/3, takefocus = True)
+        w = tk.Toplevel(width = self.WIDTH/2, height = 2*self.HEIGHT/3, takefocus = True, bg = Gray)
         w.title("Puzzle Solution")
-        masterFrame = Frame(w, width = self.WIDTH/2, height = 2*self.HEIGHT/3)
-        foundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3)
-        notFoundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3)
+        masterFrame = Frame(w, width = self.WIDTH/2, height = 2*self.HEIGHT/3, bg = Gray)
+        foundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3, bg = gray)
+        notFoundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3, bg = Gray)
 
         def _on_mousewheel(event):
             x,y = masterFrame.winfo_pointerxy()
@@ -558,11 +559,11 @@ class myGame:
 
         # Create labels for every word and put them in the appropriate Frame
         for word in self.FOUND:
-            displayLabel = tk.Label(foundFrame.scrollable_frame, text= word, fg=Onyx,font=(self.FONT_SELECT, '14'), pady = 5) 
+            displayLabel = tk.Label(foundFrame.scrollable_frame, text= word, fg=Onyx,font=(self.FONT_SELECT, '14'), pady = 5, bg = Gray) 
             displayLabel.pack()
 
         for word in self.currentWordList:
-            displayLabel = tk.Label(notFoundFrame.scrollable_frame, text= word.title(), fg=Onyx,font=(self.FONT_SELECT, '14'), pady = 5) 
+            displayLabel = tk.Label(notFoundFrame.scrollable_frame, text= word.title(), fg=Onyx,font=(self.FONT_SELECT, '14'), pady = 5, bg = Gray) 
             displayLabel.pack()
 
         # Put the bee there I guess 
@@ -571,9 +572,9 @@ class myGame:
 
         # Make and pack the Toplevel label and Frames
         message = "You found " + str(len(self.FOUND)) + " out of " + str(len(self.FOUND) + len(self.currentWordList)) + " possible words. "
-        topLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)
-        leftLabel = tk.Label(masterFrame, text= 'Found', fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5) 
-        rightLabel = tk.Label(masterFrame, text= 'Not Found', fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5)  
+        topLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5, bg = Gray)
+        leftLabel = tk.Label(masterFrame, text= 'Found', fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5, bg = Gray) 
+        rightLabel = tk.Label(masterFrame, text= 'Not Found', fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 5, bg = Gray)  
         leftLabel.grid(row = 0, column = 0, padx = 10)
         rightLabel.grid(row = 0, column = 1, padx = 10)
         foundFrame.grid(row = 1, column = 0, padx = 10, sticky=tk.N)
@@ -608,10 +609,10 @@ class myGame:
         self.rootMenu.delete(2) # THIS NEEDS TO BE THE LAST ITEM IN THE MENU OR ELSE
         self.rootMenu.delete(1) 
         
-        leaderboardsFrame = Frame(self.window, width=880, height = self.HEIGHT )
+        leaderboardsFrame = Frame(self.window, width=880, height = self.HEIGHT, bg = Gray )
         highScoreFrame = self.createHSFrame(leaderboardsFrame, 400, self.HEIGHT)
         allTimeFrame = self.createATFrame(leaderboardsFrame, 400, self.HEIGHT, allTimeScore)
-        buttonFrame = Frame(self.window, width=880, height = 100 , pady = 45)
+        buttonFrame = Frame(self.window, width=880, height = 100 , pady = 45, bg = Gray)
 
         # Initialize and grid buttons in their frame
         solutionButton = tk.Label(buttonFrame, text= "Show Solution",bg=Gunmetal, fg='white',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5 )
@@ -648,17 +649,17 @@ class myGame:
         defArray = result[0]
         word = result[1].title()
 
-        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
+        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True, bg = Gray)
         w.title("Dictionary" )
         w.focus()
 
         # Put the bee there I guess
-        beeLabel2 = tk.Label(w, image = self.beePic)
+        beeLabel2 = tk.Label(w, image = self.beePic, bg = Gray)
         beeLabel2.pack()
 
         # If no definition is found, say so
         if defArray == []:
-            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg=Onyx,font=(self.FONT_SELECT, '14'))
+            displayLabel = tk.Label(w, text= "Sorry, I could not find this word in my dictionary ...", fg=Onyx,font=(self.FONT_SELECT, '14'), bg = Gray)
             displayLabel.pack()
 
         else:
@@ -667,10 +668,10 @@ class myGame:
             else:
                 message = "I found " + str(len(defArray)) + " definitions for " + word + " : "
 
-            displayLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+            displayLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10, bg = Gray) 
             displayLabel.pack()
             for l in defArray:
-                displayLabel = tk.Label(w, text= l, fg=Onyx,font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
+                displayLabel = tk.Label(w, text= l, fg=Onyx,font=(self.FONT_SELECT, '14'), wraplength = 600 , bg = Gray) # WHY 600????
                 displayLabel.pack()
 
 
@@ -698,7 +699,7 @@ class myGame:
         num = math.ceil(math.sqrt(len(self.FOUND)))
         fontSize = str(int(-1.85*num + 28 ))
         for i in range(len(self.FOUND)):
-            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx, font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
+            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx, bg = Gray, font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
             self.customLabel.bind("<Enter>", self.makeActiveColor)
             self.customLabel.bind("<Leave>", self.resetColor)
@@ -790,11 +791,11 @@ class myGame:
         popupTextInput.pack()
 
     def hintHandler(self):
-        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
+        w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True, bg = Gray)
         w.title("Need some help?")
 
         # Put the bee there I guess 
-        beeLabel2 = tk.Label(w, image = self.beePic)
+        beeLabel2 = tk.Label(w, image = self.beePic, bg = Gray)
         beeLabel2.pack()
 
         # Choose a random word
@@ -832,7 +833,7 @@ class myGame:
 
         # if no definition, print an anagram? For now, do nothing
         if approvedDefinitions == []:
-            displayLabel = tk.Label(w, text= "Sorry, I can't give any more hints", fg=Onyx,font=(self.FONT_SELECT, '14'))
+            displayLabel = tk.Label(w, text= "Sorry, I can't give any more hints", fg=Onyx,font=(self.FONT_SELECT, '14'), bg = Gray)
             displayLabel.pack()
 
         # Found a valid word to display definitions for
@@ -848,11 +849,11 @@ class myGame:
             else:
                 message = "I took "+ str(int(self.SCORE/15)) +" points in exchange for these definitions of a word you haven't found yet : "
 
-            displayLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10) 
+            displayLabel = tk.Label(w, text= message, fg=Onyx,font=(self.FONT_SELECT, '14'), padx = 10, pady = 10, bg = Gray) 
             displayLabel.pack()
 
             for line in approvedDefinitions: # Each line is a definition, already parsed and proofread
-                displayLabel = tk.Label(w, text= line, fg=Onyx,font=(self.FONT_SELECT, '14'), wraplength = 600 ) # WHY 600????
+                displayLabel = tk.Label(w, text= line, fg=Onyx,font=(self.FONT_SELECT, '14'), wraplength = 600, bg = Gray ) # WHY 600????
                 displayLabel.pack()
             # Finally, update the score display and honey jars
             self.updateScore()
