@@ -874,10 +874,10 @@ class myGame:
         second_item = Menu(self.rootMenu)
         #second_item.add_command(label = "click", command = self.addWordToDict)
         self.rootMenu.add_cascade(label='File', menu=new_item)
-        self.rootMenu.add_cascade(label='Add a word to the dictionary',command = self.addHandler)
-        self.rootMenu.add_cascade(label='Remove a word from the dictionary',command = self.removeHandler)
-        self.rootMenu.add_cascade(label='Hint',command = self.hintHandler)
-        self.rootMenu.add_cascade(label='End Game',command = self.endGame)
+        self.rootMenu.add_command(label='Add a word to the dictionary',command = self.addHandler)
+        self.rootMenu.add_command(label='Remove a word from the dictionary',command = self.removeHandler)
+        self.rootMenu.add_command(label='Hint',command = self.hintHandler)
+        self.rootMenu.add_command(label='End Game',command = self.endGame)
         self.window.config(menu=self.rootMenu)
 
 
