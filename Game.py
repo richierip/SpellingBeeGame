@@ -19,6 +19,7 @@ ActiveYellowOrange = '#FDD99B'
 Onyx = "#3A3637"
 ActiveOnyx = '#B6AFB1'
 Lemon = '#FCD615'
+LeafGreen = '#33CC33'
 
 class myGame:
     def __init__(self, window, hexCanvas, honeyFrame, wordFrame):
@@ -441,14 +442,15 @@ class myGame:
         for i in range(self.getProperLength(len(self.userInfo.highScoreTable))): #Picking the top 15 instead of len(self.userInfo.highScoreTable)
             if i % 2 ==0:
                 bgColor = Onyx
-                textColor = Golden
+                textColor = Lemon
             else:
-                bgColor = Golden
+                bgColor = Lemon
                 textColor = Onyx
 
             currentObject = self.userInfo.highScoreTable[i]
             if int(self.SCORE) == currentObject[1] and self.userInfo.name == currentObject[0]:
-                textColor = 'green' # Highlight the score for the game that just happened
+                bgColor = LeafGreen # Highlight the score for the game that just happened
+                textColor = 'white'
             # For each row, name and associated score get own label, placed next to each other, with the same color scheme
             displayLabel = tk.Label(highScoreFrame, text= str(i+1) + "." , bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 5)
             displayLabel.grid(column = 0, row = i+1)
@@ -488,14 +490,15 @@ class myGame:
         for i in range(self.getProperLength(len(self.userInfo.allTimeTable))): 
             if i % 2 ==0:
                 bgColor = Onyx
-                textColor = Golden
+                textColor = Lemon
             else:
-                bgColor = Golden
+                bgColor = Lemon
                 textColor = Onyx
 
             currentObject = self.userInfo.allTimeTable[i]
             if self.userInfo.name == currentObject[0]:
-                textColor = 'green' # Highlight your profile's score
+                bgColor = LeafGreen # Highlight your profile's score
+                textColor = 'white'
             # For each row, name and associated score get own label, placed next to each other, with the same color scheme
             displayLabel = tk.Label(allTimeFrame, text= str(i+1) + "." , bg = bgColor, fg=textColor,font=(self.FONT_SELECT, '14'), width = 5)
             displayLabel.grid(column = 0, row = i+1)
@@ -524,10 +527,22 @@ class myGame:
 
         return allTimeFrame
     
+    def enterSO(self, event):
+        event.widget.configure(fg=LeafGreen)
+
+    def leaveSO(self, event):
+        event.widget.configure(fg='white')
+    
     def startOver(self, event):
         self.window.destroy()
         import interface
         interface.init()
+
+    def enterSolution(self, event):
+        event.widget.configure(fg=LeafGreen)
+
+    def leaveSolution(self, event):
+        event.widget.configure(fg='white')
 
     def showSolution(self, event):
         import scrollableFrame
@@ -602,14 +617,18 @@ class myGame:
         buttonFrame = Frame(self.window, width=880, height = 100 , pady = 45)
 
         # Initialize and grid buttons in their frame
-        solutionButton = tk.Label(buttonFrame, text= "Show Solution",fg=Gunmetal, bg='white',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5 )
+        solutionButton = tk.Label(buttonFrame, text= "Show Solution",bg=Gunmetal, fg='white',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5 )
         solutionButton.grid(row = 0, column = 0, padx = 15)
-        playAgainButton = tk.Label(buttonFrame, text= "Play Again",fg=Gunmetal, bg='white',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5  )
+        playAgainButton = tk.Label(buttonFrame, text= "Play Again",bg=Gunmetal, fg='white',font=(self.FONT_SELECT, '20'), width = 20 ,relief = 'groove', padx = 5  )
         playAgainButton.grid(row = 0, column = 1, padx = 15)
 
         # Bindings for buttons
-        solutionButton.bind("<Button-1>", self.showSolution) 
-        playAgainButton.bind("<Button-1>", self.startOver) 
+        solutionButton.bind("<Button-1>", self.showSolution)
+        solutionButton.bind("<Enter>", self.enterSolution) 
+        solutionButton.bind("<Leave>", self.leaveSolution)  
+        playAgainButton.bind("<Button-1>", self.startOver)
+        playAgainButton.bind("<Enter>", self.enterSO)
+        playAgainButton.bind("<Leave>", self.leaveSO) 
         
         # High score on the left, all time on the right
         highScoreFrame.grid(row = 1, column = 1, padx = 35, sticky=tk.N)

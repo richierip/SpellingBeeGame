@@ -132,7 +132,7 @@ def init():
     game.WIDTH = WIDTH
     game.HEIGHT = HEIGHT
 
-    introText = "Welcome back " + game.userInfo.name + "! Get ready for a Spelling Bee! Make words from the available letters, but all words must use the center letter. If you would like to play as somebody else, enter your name below. "
+    introText = "Welcome back " + game.userInfo.name + "! Get ready for a Spelling Bee! Make words from the available letters, but all words must use the center letter. If you would like to play as somebody else, enter your name below, and choose a difficulty setting. "
 
     # add an instructions label 
     instructions = tk.Label(game.window, text = introText, font = ('Helvetica', 20), wraplength = 600, padx = 100, pady = 20) 

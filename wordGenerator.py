@@ -1,11 +1,9 @@
 ''' 5/29/2019 by PR - Spelling Bee game for kids :) '''
 
-import random
+import random, copy
 MIN_WORD_SIZE = 3
-MIN_WORDS_REQUIRED = 25
 DICT_FILE = 'data/small_dict.txt'
 DEF_FILE = 'data/azdictionary.txt'
-
 
 def addedToDictionary(newWord):
     try:
@@ -32,30 +30,75 @@ def removedFromDictionary(word):
     except:
         return False
 
-def checkForRules(words, letters):
+def checkForRules(words, letters, hardLetterCap, MIN_WORDS_REQUIRED):
     hardLetters = ['q','z','x','v','j']
-    if len(check(words,letters[0],letters)) < MIN_WORDS_REQUIRED:
-        print("FAILED: TOO FEW WORDS FOUND")
-        print(len(check(words,letters[0],letters)))
-        return False
     # Make sure there aren't annoying letters in the same set
-    elif len([i for i in hardLetters if i in letters]) >= 2:
-        print("FAILED: ANNOYING LETTERS")
+    if len([i for i in hardLetters if i in letters]) >= hardLetterCap:
+        #print("FAILED: ANNOYING LETTERS")
+        return False
+    if 'q' in letters and 'u' not in letters:
+        return False
+    if len(check(words,letters[0],letters)) < MIN_WORDS_REQUIRED:
+        #print("FAILED: TOO FEW WORDS FOUND")
+        #print(len(check(words,letters[0],letters)))
         return False
     return True
 
-def getLetterset(words, difficulty):
+''' 
+Center letter always a vowel. No more than 1 "hard letters", always two vowels.
+'''
+def easyMode(words):
     consonants = ['b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z']
     vowels = ['a','e','i','o','u']
     while True:
-        print("In loop")
         twoVowels = random.sample(vowels, 2)
         fiveConsonants = random.sample(consonants,5)
         testLetterSet = twoVowels + fiveConsonants # Mandate that letterset has 2 vowels and five consonants
-        print(testLetterSet)
-        if(checkForRules(words, testLetterSet)):
-            print("LETTERSET", testLetterSet)
+        if(checkForRules(words, testLetterSet, 1, 30)):
+            #print("LETTERSET", testLetterSet)
             return testLetterSet[0], testLetterSet
+
+''' 
+Center letter always a consonant. No more than 2 "hard letters", always two vowels.
+'''
+def mediumMode(words):
+    consonants = ['b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z']
+    vowels = ['a','e','i','o','u']
+    while True:
+        twoVowels = random.sample(vowels, 2)
+        fiveConsonants = random.sample(consonants,5)
+        testLetterSet = fiveConsonants + twoVowels # Mandate that letterset has 2 vowels and five consonants
+        if(checkForRules(words, testLetterSet, 3, 20)):
+            #print("LETTERSET", testLetterSet)
+            return testLetterSet[0], testLetterSet
+'''
+Center letter always a hard consonant. One or two vowels. Hard letter cap is 3, min words required is 20.
+'''
+def hardMode(words):
+    consonants = ['b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z']
+    vowels = ['a','e','i','o','u']
+    hardLetters = ['q','z','x','v','j', 'k', 'p', 'm', 'w', 'h', 'f']
+    while True:
+        consonantPool = copy.copy(consonants)
+        center = [random.choice(hardLetters)]
+        print("center is ", center)
+        print("center is ", center[0])
+        consonantPool.remove(center[0])
+        numVowels = random.randint(1,2)
+        myVowels = random.sample(vowels, numVowels)
+        myConsonants = random.sample(consonantPool,6-numVowels)
+        testLetterSet = center + myConsonants + myVowels 
+        if(checkForRules(words, testLetterSet, 3, 20)):
+            #print("LETTERSET", testLetterSet)
+            return testLetterSet[0], testLetterSet
+
+def getLetterset(words, difficulty):
+    if difficulty == "Bee":
+        return easyMode(words)
+    elif difficulty == "Wasp":
+        return mediumMode(words)
+    elif difficulty == "Hornet":
+        return hardMode(words)
 
 def convertToUpper(letterset):
     newSet = []
