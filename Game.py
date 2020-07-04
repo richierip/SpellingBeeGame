@@ -224,14 +224,11 @@ class myGame:
         totalFound = self.ORIGINAL_LETTER_COUNT - self.countChars(self.currentWordList)
         scalar = 1000 / self.ORIGINAL_LETTER_COUNT # Max score considered 1000 here
         self.SCORE = (totalFound * scalar) - self.hintPenalty
-
         self.scoreLabel.configure(text="Score: " + str(int(self.SCORE)))
-        print("SCORE is : ", self.SCORE)
+        #print("SCORE is : ", self.SCORE)
         self.updateHoney(self.SCORE)
 
     def clearHoneyFrame(self):
-        print("$$$$$$$$$$")
-        #self.blank = tk.PhotoImage(file = 'data/bee2.gif')
         if self.SCORE <750:
             self.honey4Label.configure(image = self.blank)
             self.honey4Label.image = self.blank
@@ -321,10 +318,6 @@ class myGame:
     def enterWord(self, event):
         guess = self.textInput.get().lower()
         if guess in self.currentWordList:
-            print("")
-            print("GOT ONE!")
-            #print("Definition : ")
-            #print(lookup(defList, guess))
 
             # Take the word out of list and put it in FOUND
             self.currentWordList.remove(guess)
@@ -333,12 +326,10 @@ class myGame:
             except:
                 None # We don't care if it's already been removed
             self.FOUND.append(guess.title())
-            print(self.currentWordList)
             self.updateWordFrame()
             self.updateScore()
             self.flashCorrect()
         else:
-            print("DARN!") 
             self.flashIncorrect()
         self.textInput.selection_clear()
         self.textInput.delete(0,tk.END)
@@ -651,7 +642,6 @@ class myGame:
         defArray = result[0]
         word = result[1].title()
 
-        print("Definition : ", defArray)
         w = tk.Toplevel(width = self.WIDTH/2, height = self.HEIGHT/2, takefocus = True)
         w.title("Dictionary" )
         w.focus()
@@ -679,12 +669,7 @@ class myGame:
 
 
     def wordLabelClicked(self, event):
-        print(event.widget)
         self.displayDefinition(event.widget.cget("text"))
-
-        #TODO Why the hell is this frame resizing itself
-        print("FRAME WIDTH IS ",self.wordFrame.cget("width"))
-        print("FRAME HEIGHT IS ",self.wordFrame.cget("height"))
 
     def clearWordFrame(self):
         list = self.wordFrame.grid_slaves()

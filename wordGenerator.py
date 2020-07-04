@@ -81,8 +81,6 @@ def hardMode(words):
     while True:
         consonantPool = copy.copy(consonants)
         center = [random.choice(hardLetters)]
-        print("center is ", center)
-        print("center is ", center[0])
         consonantPool.remove(center[0])
         numVowels = random.randint(1,2)
         myVowels = random.sample(vowels, numVowels)
@@ -165,8 +163,6 @@ def lookup(fullDict, word):
 
         # grab whole definition if it's a match
         if test:
-            print("CURRENT KEY IS :", currentKey)
-            print("LAST CHAR IS :", currentKey[-1])
             found.append(trimLine(fullDict[i][0:-1]))
 
             if doubleCheck < 10: # Check the next 10 entries as well
@@ -194,7 +190,6 @@ def check(words, keyletter, otherletters):
                 testPassed = False
                 break
         if testPassed:
-            print(currentWord)
             if len(currentWord) >= MIN_WORD_SIZE:
                 found.append(currentWord)
     return found

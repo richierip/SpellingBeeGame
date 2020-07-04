@@ -48,7 +48,7 @@ def startGame(event):
     words, game.defList = getWords()
     keyletter, game.letterSet = getLetterset(words, game.userInfo.difficulty)
 
-    print("\n Searching for letters in ", len(words), "words... \n")
+    #print("\n Searching for letters in ", len(words), "words... \n")
     game.currentWordList = check(words, keyletter, game.letterSet)
     game.validHints = copy.copy(game.currentWordList)
 
@@ -60,8 +60,8 @@ def startGame(event):
     game.ORIGINAL_LETTER_COUNT = game.countChars(game.currentWordList)
     
     #currentWordList = sorted(currentWordList, key=len)
-    print("Found ", len(game.currentWordList), "words: ")
-    print(game.currentWordList)
+    # print("Found ", len(game.currentWordList), "words: ")
+    # print(game.currentWordList)
 
     #  Replace name in Persistent Storage
     global nameBox
