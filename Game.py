@@ -1,5 +1,12 @@
-''' This file holds the Game object class instantiated in interface.py'''
+''' 
+Project - Spelling Bee game for kids :)
 
+- Developed by Peter Richieri from scratch with much help from Google and online Tkinter manual pages
+- Made on windows but should run fine on mac
+- No special packages needed
+
+This file holds the Game object class instantiated in SpellingBee.py
+'''
 import random, copy, math
 import tkinter as tk
 from tkinter import scrolledtext
@@ -8,7 +15,6 @@ from tkinter import Canvas
 from tkinter import Frame
 from wordGenerator import *
 import StoreAndLoad
-#import interface
 
 Golden = '#F3C622'
 ActiveGolden = '#FAE69E'
@@ -526,8 +532,8 @@ class myGame:
     
     def startOver(self, event):
         self.window.destroy()
-        import interface
-        interface.init()
+        import SpellingBee
+        SpellingBee.init()
 
     def enterSolution(self, event):
         event.widget.configure(fg=LeafGreen)

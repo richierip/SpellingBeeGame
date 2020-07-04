@@ -1,4 +1,11 @@
-''' 5/29/2019 by PR - Spelling Bee game for kids :) '''
+''' Project - Spelling Bee game for kids :)
+
+- Developed by Peter Richieri from scratch with much help from Google and online Tkinter manual pages
+- Made on windows but should run fine on mac
+- No special packages needed
+
+This file sets up the intro screen and intantiates a Game object. Running this file will start the game
+ '''
 
 import random, copy, math
 import tkinter as tk
@@ -125,20 +132,26 @@ def init():
     global game
     game = myGame(window, hexCanvas, honeyFrame, wordFrame)
     game.checkUser()
-    game.window.title("Welcome to Spelling Bee for Kids!")
+    game.window.title("Welcome to Spelling Bee!")
     game.window.option_add('*tearOff', False)
     game.window.geometry(str(int(13*WIDTH/16))+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
     center(game.window)
     game.WIDTH = WIDTH
     game.HEIGHT = HEIGHT
 
-    introText = "Welcome back " + game.userInfo.name + "! Get ready for a Spelling Bee! Make words from the available letters, but all words must use the center letter. If you would like to play as somebody else, enter your name below, and choose a difficulty setting. "
+    introText = "Welcome back " + game.userInfo.name + "! Get ready for a Spelling Bee! Make words from the available letters, but all words must use the center letter and be at least 3 characters long. If you would like to play as somebody else, enter your name below, and choose a difficulty setting. "
 
     # add an instructions label 
     instructions = tk.Label(game.window, text = introText, font = ('Helvetica', 20), wraplength = 600, padx = 100, pady = 20) 
     instructions.grid() 
     
     # add a text entry box for entering name and a button next to it
+    def inStart(event):
+        event.widget.configure(bg = Lemon)
+
+    def leaveStart(event):
+        event.widget.configure(bg = 'white')
+
     entryFrame = Frame(game.window)
     global nameBox
     nameBox = tk.Entry(entryFrame,width=10,justify = tk.CENTER,font=(game.FONT_SELECT, '36')) 
@@ -147,7 +160,9 @@ def init():
     startButton.grid(row = 0, column = 1, padx = 15) 
     # run the 'startGame' function when the enter key is pressed 
     game.window.bind('<Return>', startGame) 
-    startButton.bind("<Button-1>", startGame) 
+    startButton.bind("<Button-1>", startGame)
+    startButton.bind("<Enter>", inStart)
+    startButton.bind("<Leave>", leaveStart)   
     nameBox.focus_set() # set focus on the entry box
     entryFrame.grid() 
 

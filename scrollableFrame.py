@@ -1,3 +1,14 @@
+''''
+Project - Spelling Bee game for kids :)
+
+- Developed by Peter Richieri from scratch with much help from Google and online Tkinter manual pages
+- Made on windows but should run fine on mac
+- No special packages needed
+
+This file embeds a Canvas in a Frame to allow scrolling while maintaining a Frame's features. 
+The idea and most of the code was pulled from stackExchange
+'''
+
 import tkinter as tk
 from tkinter import ttk
 

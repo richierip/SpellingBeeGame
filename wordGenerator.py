@@ -1,4 +1,11 @@
-''' 5/29/2019 by PR - Spelling Bee game for kids :) '''
+''' Project - Spelling Bee game for kids :)
+
+- Developed by Peter Richieri from scratch with much help from Google and online Tkinter manual pages
+- Made on windows but should run fine on mac
+- No special packages needed
+
+This file holds the backend functions that parse the text files and generate the letterset used for the games
+ '''
 
 import random, copy
 MIN_WORD_SIZE = 3

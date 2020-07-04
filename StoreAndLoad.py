@@ -1,4 +1,11 @@
-''' This file holds the user controlled information and methods to store that info persistently'''
+''' 
+Project - Spelling Bee game for kids :)
+
+- Developed by Peter Richieri from scratch with much help from Google and online Tkinter manual pages
+- Made on windows but should run fine on mac
+- No special packages needed
+ 
+This file holds the user controlled information and methods to store that info persistently using the Pickle framework. '''
 
 import pickle
 
