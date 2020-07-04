@@ -83,7 +83,7 @@ def startGame(event):
     game.textInput = tk.Entry(game.window,width=10, justify = tk.CENTER,font=(game.FONT_SELECT, '36'), borderwidth = 0, highlightthickness=0)
     game.textInput.focus() 
     icon = tk.PhotoImage(file = 'data/enter.gif')
-    game.enterIcon = tk.Label(game.window, image = icon, padx = 0, highlightthickness=0,borderwidth = 0)
+    game.enterIcon = tk.Label(game.window, image = icon, padx = 0, highlightthickness=0,borderwidth = 0, bg = Gray)
     game.enterIcon.image = icon # Need this
 
     # Score label code

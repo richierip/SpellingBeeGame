@@ -548,8 +548,8 @@ class myGame:
         w = tk.Toplevel(width = self.WIDTH/2, height = 2*self.HEIGHT/3, takefocus = True, bg = Gray)
         w.title("Puzzle Solution")
         masterFrame = Frame(w, width = self.WIDTH/2, height = 2*self.HEIGHT/3, bg = Gray)
-        foundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3, bg = gray)
-        notFoundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3, bg = Gray)
+        foundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3)
+        notFoundFrame = scrollableFrame.ScrollableFrame(masterFrame, height = 2*self.HEIGHT/3)
 
         def _on_mousewheel(event):
             x,y = masterFrame.winfo_pointerxy()
