@@ -605,8 +605,8 @@ class myGame:
 
         # Clear everything, delete the Endgame menu option and Hint option
         self.clearWindow()
-        self.rootMenu.delete(4) # THIS NEEDS TO BE THE LAST ITEM IN THE MENU OR ELSE
-        self.rootMenu.delete(3) 
+        self.rootMenu.delete(2) # THIS NEEDS TO BE THE LAST ITEM IN THE MENU OR ELSE
+        self.rootMenu.delete(1) 
         
         leaderboardsFrame = Frame(self.window, width=880, height = self.HEIGHT )
         highScoreFrame = self.createHSFrame(leaderboardsFrame, 400, self.HEIGHT)
