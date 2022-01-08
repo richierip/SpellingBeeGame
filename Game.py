@@ -34,6 +34,7 @@ class myGame:
         self.HEIGHT = None
         self.letterSet = None
         self.currentWordList = []
+        self.pangrams = []
         self.textInput = None
         self.FONT_SELECT = 'Comic Sans'
         self.SCORE = 0
@@ -315,6 +316,14 @@ class myGame:
         self.textInput.configure(bg = 'orange')
         self.window.after(150, self.resetInputColor)
 
+    def flashPangram(self):
+        self.textInput.configure(bg = 'blue')
+        self.window.after(150, self.resetInputColor)
+        self.textInput.configure(bg = 'blue')
+        self.window.after(150, self.resetInputColor)
+        self.textInput.configure(bg = 'blue')
+        self.window.after(150, self.resetInputColor)
+
     def flashIncorrect(self):
         self.textInput.configure(bg = 'red')
         self.window.after(150, self.resetInputColor)
@@ -339,10 +348,14 @@ class myGame:
             self.FOUND.append(guess.title())
             self.updateWordFrame()
             self.updateScore()
-            self.flashCorrect()
+            if guess.lower() in self.pangrams:
+                self.flashPangram()
+            else:
+                self.flashCorrect()
 
         elif guess.title() in self.FOUND:
             self.flashFound()
+
         else:
             self.flashIncorrect()
         self.textInput.selection_clear()

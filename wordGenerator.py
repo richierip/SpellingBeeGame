@@ -12,6 +12,7 @@ MIN_WORD_SIZE = 3
 DICT_FILE = 'data/small_dict.txt'
 DEF_FILE = 'data/azdictionary.txt'
 REQUIRE_PANGRAM = True
+PANGRAMS = []
 
 def addedToDictionary(newWord):
     try:
@@ -39,17 +40,23 @@ def removedFromDictionary(word):
         return False
 
 def hasPangram(words,letters):
-    print("MADE IT to pangram!")
     foundPangram = False
+    pangrams = []
     testSet = copy.copy(letters)
     for word in words:
         testSet = copy.copy(letters)
         for character in word:
             if testSet == []:
-                print(word)
-                return True
+                foundPangram = True
+                pangrams.append(word)
+                break
             if character in testSet: testSet.remove(character)
-    return False
+    
+    if foundPangram:
+        global PANGRAMS 
+        PANGRAMS = pangrams
+
+    return foundPangram
     
 
 def checkForRules(words, letters, hardLetterCap, MIN_WORDS_REQUIRED):
@@ -84,7 +91,7 @@ def easyMode(words):
         testLetterSet = twoVowels + fiveConsonants # Mandate that letterset has 2 vowels and five consonants
         if(checkForRules(words, testLetterSet, 1, 30)):
             #print("LETTERSET", testLetterSet)
-            return testLetterSet[0], testLetterSet
+            return testLetterSet[0], testLetterSet, PANGRAMS
 
 ''' 
 Center letter always a consonant. No more than 2 "hard letters", always two vowels.
@@ -98,7 +105,7 @@ def mediumMode(words):
         testLetterSet = fiveConsonants + twoVowels # Mandate that letterset has 2 vowels and five consonants
         if(checkForRules(words, testLetterSet, 3, 20)):
             #print("LETTERSET", testLetterSet)
-            return testLetterSet[0], testLetterSet
+            return testLetterSet[0], testLetterSet, PANGRAMS
 '''
 Center letter always a hard consonant. One or two vowels. Hard letter cap is 3, min words required is 20.
 '''
@@ -116,7 +123,7 @@ def hardMode(words):
         testLetterSet = center + myConsonants + myVowels 
         if(checkForRules(words, testLetterSet, 3, 20)):
             #print("LETTERSET", testLetterSet)
-            return testLetterSet[0], testLetterSet
+            return testLetterSet[0], testLetterSet, PANGRAMS
 
 def getLetterset(words, difficulty):
     if difficulty == "Bee":

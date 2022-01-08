@@ -54,8 +54,9 @@ def startGame(event):
     game.window.geometry(str(WIDTH)+'x'+str(HEIGHT))+"-5+1200"  # THIS DOESN'T WORK WTF
 
     words, game.defList = getWords()
-    keyletter, game.letterSet = getLetterset(words, game.userInfo.difficulty)
+    keyletter, game.letterSet, game.pangrams = getLetterset(words, game.userInfo.difficulty)
 
+    print(game.pangrams)
     #print("\n Searching for letters in ", len(words), "words... \n")
     game.currentWordList = check(words, keyletter, game.letterSet)
     game.validHints = copy.copy(game.currentWordList)
