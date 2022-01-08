@@ -11,6 +11,7 @@ import random, copy
 MIN_WORD_SIZE = 3
 DICT_FILE = 'data/small_dict.txt'
 DEF_FILE = 'data/azdictionary.txt'
+REQUIRE_PANGRAM = True
 
 def addedToDictionary(newWord):
     try:
@@ -37,6 +38,20 @@ def removedFromDictionary(word):
     except:
         return False
 
+def hasPangram(words,letters):
+    print("MADE IT to pangram!")
+    foundPangram = False
+    testSet = copy.copy(letters)
+    for word in words:
+        testSet = copy.copy(letters)
+        for character in word:
+            if testSet == []:
+                print(word)
+                return True
+            if character in testSet: testSet.remove(character)
+    return False
+    
+
 def checkForRules(words, letters, hardLetterCap, MIN_WORDS_REQUIRED):
     hardLetters = ['q','z','x','v','j']
     # Make sure there aren't annoying letters in the same set
@@ -45,10 +60,16 @@ def checkForRules(words, letters, hardLetterCap, MIN_WORDS_REQUIRED):
         return False
     if 'q' in letters and 'u' not in letters:
         return False
-    if len(check(words,letters[0],letters)) < MIN_WORDS_REQUIRED:
+
+    myWordSet = check(words,letters[0],letters)
+    if len(myWordSet) < MIN_WORDS_REQUIRED:
         #print("FAILED: TOO FEW WORDS FOUND")
         #print(len(check(words,letters[0],letters)))
         return False
+
+    if REQUIRE_PANGRAM:
+        return hasPangram(myWordSet,letters)
+    
     return True
 
 ''' 
