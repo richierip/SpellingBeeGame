@@ -311,6 +311,10 @@ class myGame:
         self.textInput.configure(bg = 'green')
         self.window.after(150, self.resetInputColor)
 
+    def flashFound(self):
+        self.textInput.configure(bg = 'orange')
+        self.window.after(150, self.resetInputColor)
+
     def flashIncorrect(self):
         self.textInput.configure(bg = 'red')
         self.window.after(150, self.resetInputColor)
@@ -336,6 +340,9 @@ class myGame:
             self.updateWordFrame()
             self.updateScore()
             self.flashCorrect()
+
+        elif guess.title() in self.FOUND:
+            self.flashFound()
         else:
             self.flashIncorrect()
         self.textInput.selection_clear()
