@@ -21,6 +21,7 @@ ActiveGolden = '#FAE69E'
 Gunmetal = '#23212C'
 ActiveGunmetal = '#C7C5D3'
 YellowOrange = '#FCB43A'
+YellowOrangePangram = '#FCB43B'
 ActiveYellowOrange = '#FDD99B'
 Onyx = "#3A3637"
 ActiveOnyx = '#B6AFB1'
@@ -704,10 +705,18 @@ class myGame:
             l.destroy()
 
     def makeActiveColor(self, event):
-        event.widget.configure(bg = YellowOrange)
+        current = event.widget.cget("bg")
+        if current == '#4682B4':
+            event.widget.configure(bg = YellowOrangePangram)
+        else:
+            event.widget.configure(bg = YellowOrange)
 
     def resetColor(self, event):
-        event.widget.configure(bg = self.wordFrame.cget("bg"))
+        current = event.widget.cget("bg")
+        if current == YellowOrangePangram:
+            event.widget.configure(bg = '#4682B4')
+        else:
+            event.widget.configure(bg = Gray)
 
     def updateWordFrame(self):
         # Sort found words list show they show up alphabetically
@@ -716,15 +725,18 @@ class myGame:
         self.clearWordFrame()
 
         #Regrid everything with new bindings   #TODO dynamically size the text?
-        num = math.ceil(math.sqrt(len(self.FOUND)))
-        fontSize = str(int(-1.85*num + 28 ))
+        k = math.ceil(math.sqrt(len(self.FOUND)))
+        fontSize = str(int(-1.85*k + 28 )) # Somehow this does a good job LMAO
         for i in range(len(self.FOUND)):
-            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=Onyx, bg = Gray, font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
+            fg = Onyx ; bg = Gray
+            if self.FOUND[i].lower() in self.pangrams:
+                bg = '#4682B4' # blue
+            self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=fg, bg = bg, font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
             self.customLabel.bind("<Enter>", self.makeActiveColor)
             self.customLabel.bind("<Leave>", self.resetColor)
-            #print("current lable column: ", int(i%num), ", row: ", int(i/num))
-            self.customLabel.grid(row = int(i%(num+1)), column = int(i/(num+1)))
+            #print("current lable column: ", int(i%k), ", row: ", int(i/k))
+            self.customLabel.grid(row = int(i%(k+1)), column = int(i/(k+1)))
 
     #######################################
     #          MENU Handlers        #
