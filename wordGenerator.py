@@ -42,15 +42,14 @@ def removedFromDictionary(word):
 def hasPangram(words,letters):
     foundPangram = False
     pangrams = []
-    testSet = copy.copy(letters)
     for word in words:
         testSet = copy.copy(letters)
         for character in word:
+            if character in testSet: testSet.remove(character)
             if testSet == []:
                 foundPangram = True
                 pangrams.append(word)
                 break
-            if character in testSet: testSet.remove(character)
     
     if foundPangram:
         global PANGRAMS 

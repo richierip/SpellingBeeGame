@@ -41902,7 +41902,6 @@ cozy
 cozy's
 cpd
 cpl
-cps
 crab
 crab's
 crabbed
@@ -52337,7 +52336,6 @@ esophagus's
 esophaguses
 esoteric
 esoterically
-esp
 espadrille
 espadrille's
 espadrilles
@@ -85906,7 +85904,6 @@ payslips
 paywall
 paywall's
 paywalls
-pct
 pd
 pea
 pea's
@@ -94061,7 +94058,6 @@ razzes
 razzing
 razzmatazz
 razzmatazz's
-rcpt
 rd
 re
 re's

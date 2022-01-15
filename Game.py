@@ -28,6 +28,7 @@ ActiveOnyx = '#B6AFB1'
 Lemon = '#FCD615'
 LeafGreen = '#33CC33'
 Gray = '#F2F2F2'
+PangramColor = '#4682B4'
 
 class myGame:
     def __init__(self, window, hexCanvas, honeyFrame, wordFrame):
@@ -706,7 +707,7 @@ class myGame:
 
     def makeActiveColor(self, event):
         current = event.widget.cget("bg")
-        if current == '#4682B4':
+        if current == PangramColor:
             event.widget.configure(bg = YellowOrangePangram)
         else:
             event.widget.configure(bg = YellowOrange)
@@ -714,7 +715,7 @@ class myGame:
     def resetColor(self, event):
         current = event.widget.cget("bg")
         if current == YellowOrangePangram:
-            event.widget.configure(bg = '#4682B4')
+            event.widget.configure(bg = PangramColor)
         else:
             event.widget.configure(bg = Gray)
 
@@ -730,7 +731,7 @@ class myGame:
         for i in range(len(self.FOUND)):
             fg = Onyx ; bg = Gray
             if self.FOUND[i].lower() in self.pangrams:
-                bg = '#4682B4' # blue
+                bg = PangramColor # blue
             self.customLabel = tk.Label(self.wordFrame, text=self.FOUND[i], fg=fg, bg = bg, font=(self.FONT_SELECT, fontSize), padx = 4, pady = 3)
             self.customLabel.bind("<Button-1>", self.wordLabelClicked)
             self.customLabel.bind("<Enter>", self.makeActiveColor)
